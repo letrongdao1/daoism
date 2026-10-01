@@ -2,6 +2,7 @@
 
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import { Badge } from "@/components/ui/badge";
+import { Eyebrow, Heading } from "@/components/ui/typography";
 
 const timeline = [
   {
@@ -47,18 +48,10 @@ export default function Experience() {
       className="relative bg-paper px-6 py-28 md:px-[8vw]"
       aria-label="Experience and education"
     >
-      <p
-        data-reveal
-        className="mb-3 font-display text-xs uppercase tracking-[0.4em] text-accent"
-      >
-        Experience
-      </p>
-      <h2
-        data-reveal
-        className="mb-16 font-display text-4xl font-medium leading-tight text-ink md:text-5xl"
-      >
+      <Eyebrow data-reveal>Experience</Eyebrow>
+      <Heading data-reveal className="mb-16 text-ink">
         Where I've been.
-      </h2>
+      </Heading>
 
       <ol className="border-t border-ink/10">
         {timeline.map((item) => (

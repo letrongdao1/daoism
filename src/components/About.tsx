@@ -5,6 +5,7 @@ import { useScrollReveal } from "../hooks/useScrollReveal";
 import { ScrollTrigger } from "../lib/gsap";
 import TechChip from "./TechChip";
 import type { TechId } from "@/data/techs";
+import { Em } from "./ui/typography";
 
 const stack: { label: string; techs: TechId[] }[] = [
   { label: "Languages", techs: ["typescript", "javascript", "csharp", "java"] },
@@ -94,17 +95,20 @@ export default function About() {
           </h2>
           <div className="mt-8 max-w-lg space-y-4 text-base text-paper/65 md:text-lg">
             <p>
-              I'm a frontend engineer with about 2 years of experience building
-              web apps for a securities company in Ho Chi Minh City. I build
-              clean, responsive interfaces in React and Next.js, and I keep
-              production systems stable for the business users who rely on them
-              every day.
+              I am a frontend engineer with about <Em>two years</Em> of
+              experience building web applications for a securities firm in Ho
+              Chi Minh City. I craft clean, responsive interfaces with React and
+              Next.js, and I keep production systems reliable for the people
+              who depend on them every day.
             </p>
             <p>
-              I also work on the backend. I've built APIs in ASP.NET and Node.js
-              with SQL databases, so I can take a feature from the UI all the
-              way to the data. I use AI tools such as Claude Code to work
-              faster, and I review every change myself.
+              I also work on the backend, building APIs with ASP.NET and Node.js
+              on SQL databases, so I can carry a feature from the interface
+              through to the data.
+            </p>
+            <p>
+              I use AI tools such as Claude Code to work more efficiently, and I
+              review every change myself.
             </p>
           </div>
         </div>

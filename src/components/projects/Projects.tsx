@@ -9,11 +9,15 @@ import TechChip from "../TechChip";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { Eyebrow, Heading } from "@/components/ui/typography";
 
 export default function Projects() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [open, setOpen] = useState<Project | null>(null);
+  const [active, setActive] = useState(0);
+  const [pinned, setPinned] = useState(false);
+  const goTo = useRef<(i: number) => void>(() => {});
 
   useEffect(() => {
     const mm = gsap.matchMedia();
@@ -40,6 +44,12 @@ export default function Projects() {
         ),
         1,
       ];
+      const cardPoints = points.slice(1, -1);
+      const nearest = (p: number) =>
+        cardPoints.reduce(
+          (best, q, i) => (Math.abs(q - p) < Math.abs(cardPoints[best] - p) ? i : best),
+          0,
+        );
 
       const tween = gsap.to(track, {
         x: -distance,
@@ -59,10 +69,22 @@ export default function Projects() {
             delay: 0,
             ease: "power2.inOut",
           },
+          onUpdate: (self) => setActive(nearest(self.progress)),
         },
       });
 
+      goTo.current = (i) => {
+        const st = tween.scrollTrigger;
+        if (!st) return;
+        window.scrollTo({
+          top: st.start + cardPoints[i] * (st.end - st.start),
+          behavior: "smooth",
+        });
+      };
+      setPinned(true);
+
       return () => {
+        setPinned(false);
         tween.scrollTrigger?.kill();
         tween.kill();
       };
@@ -87,19 +109,39 @@ export default function Projects() {
         <div className="pointer-events-none absolute left-0 top-0 z-10 hidden h-full w-24 bg-linear-to-r from-paper to-transparent md:block" />
         <div className="pointer-events-none absolute right-0 top-0 z-10 hidden h-full w-24 bg-linear-to-l from-paper to-transparent md:block" />
 
+        {pinned && (
+          <div className="absolute bottom-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1">
+            {projects.map((project, i) => (
+              <button
+                key={project.title}
+                type="button"
+                aria-label={`Show ${project.title}`}
+                aria-current={i === active}
+                onClick={() => goTo.current(i)}
+                className="group/dot cursor-pointer p-1.5"
+              >
+                <span
+                  className={cn(
+                    "block h-2 rounded-xl transition-all duration-500 ease-spring",
+                    i === active ? "w-10 bg-accent" : "w-3 bg-ink group-hover/dot:bg-ink/60",
+                  )}
+                />
+              </button>
+            ))}
+          </div>
+        )}
+
         <div
           ref={trackRef}
           className="flex flex-col gap-10 px-6 md:h-screen md:w-max md:flex-row md:items-center md:gap-6 md:px-[8vw]"
         >
           <div className="shrink-0 md:w-[28vw]">
-            <p className="mb-3 font-display text-xs uppercase tracking-[0.4em] text-accent">
-              Selected Work
-            </p>
-            <h2 className="font-display text-4xl font-medium leading-tight text-ink md:text-5xl">
+            <Eyebrow>Selected Work</Eyebrow>
+            <Heading className="text-ink">
               A few things
               <br />
               worth showing.
-            </h2>
+            </Heading>
           </div>
 
           {projects.map((project) => {

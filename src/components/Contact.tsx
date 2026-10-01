@@ -2,6 +2,7 @@
 
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { Button } from '@/components/ui/button'
+import { Eyebrow, Heading } from "@/components/ui/typography";
 
 const links = [
   { label: 'Email', href: 'mailto:letrongdaocontact8@gmail.com' },
@@ -22,14 +23,12 @@ export default function Contact() {
       <div className="pulse-glow absolute left-1/2 top-1/2 h-[50vmax] w-[50vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.25)_0%,transparent_70%)] blur-3xl" aria-hidden="true" />
 
       <div className="relative z-10">
-        <p className="mb-4 font-display text-xs uppercase tracking-[0.4em] text-accent">
-          Get in touch
-        </p>
-        <h2 className="font-display text-5xl font-medium leading-tight text-ink md:text-7xl">
+        <Eyebrow className="mb-4">Get in touch</Eyebrow>
+        <Heading className="text-5xl leading-tight text-ink md:text-7xl">
           Let's build
           <br />
           something.
-        </h2>
+        </Heading>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-6">
           {links.map((link) => (
