@@ -78,7 +78,6 @@ export default function Hero() {
 
       gsap.set(cornerIconsRef.current, { y: 24 });
 
-      // swap the hero icons for the corner copy as they leave the screen
       ScrollTrigger.create({
         trigger: heroIconsRef.current,
         start: "top 10%",
@@ -138,7 +137,7 @@ export default function Hero() {
         aria-label={link.label}
         title={link.label}
       >
-        {/* black PNG used as a mask so it takes the text color */}
+        {/* mask so it takes the text color */}
         <span
           className="h-7 w-7 bg-current"
           style={{
@@ -157,7 +156,6 @@ export default function Hero() {
       className="relative flex min-h-screen py-28 flex-col items-center justify-center overflow-hidden bg-ink"
       aria-label="Introduction"
     >
-      {/* soft background glows */}
       <div className="layer" aria-hidden="true">
         <div
           ref={blobARef}
@@ -169,7 +167,6 @@ export default function Hero() {
         />
       </div>
 
-      {/* faint grid texture */}
       <div
         className="layer opacity-[0.04]"
         aria-hidden="true"
@@ -181,10 +178,9 @@ export default function Hero() {
       />
 
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-6 md:grid-cols-[1.25fr_1fr] md:px-10">
-        {/* right column (first in DOM so the h1 leads on mobile) */}
+        {/* first in DOM so the h1 leads on mobile */}
         <div className="flex flex-col items-center text-center md:order-last">
           <div data-hero-fade className="relative w-64 sm:w-80 lg:w-96">
-            {/* warm glow + thin ring sit behind the head */}
             <div
               className="absolute left-1/2 top-[8%] aspect-square w-[85%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.28)_0%,rgba(201,162,75,0.08)_45%,transparent_70%)]"
               aria-hidden="true"
@@ -194,7 +190,6 @@ export default function Hero() {
               alt="Portrait of Dao Trong Le"
               className="relative w-full select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
               style={{
-                // the cut-off torso dissolves into the dark background
                 maskImage:
                   "linear-gradient(to bottom, black 60%, transparent 95%)",
                 WebkitMaskImage:
@@ -235,8 +230,7 @@ export default function Hero() {
             className="font-display text-3xl font-medium leading-tight text-paper lg:text-4xl"
           >
             I build <span className="sr-only">clean, reliable</span>
-            {/* every word sits in the same grid cell, so the slot is always as
-                wide as the longest one and nothing shifts when it changes */}
+            {/* all words share one cell so the width never shifts */}
             <span className="inline-grid" aria-hidden="true">
               {adjectives.map((word, i) => (
                 <span
@@ -294,7 +288,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* corner copy, shown once the hero copy has faded out */}
       <div
         ref={cornerIconsRef}
         className="invisible fixed bottom-6 right-6 z-50 flex items-center gap-2 opacity-0 mix-blend-difference"

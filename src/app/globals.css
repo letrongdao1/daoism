@@ -37,10 +37,7 @@ body {
   font-family: var(--font-display);
 }
 
-/* Depth layers — see epic-design skill depth system.
-   Declared inside @layer utilities so Tailwind utility classes (e.g. `relative`)
-   can still override `position` when combined on the same element — unlayered
-   CSS always beats layered CSS regardless of source order otherwise. */
+/* layered so utilities like `relative` can override */
 @layer utilities {
   .layer {
     position: absolute;
@@ -112,7 +109,6 @@ body {
   }
 }
 
-/* project demos: active items pop in with a little overshoot */
 @keyframes pop {
   0% {
     transform: scale(0.85);
@@ -126,7 +122,6 @@ body {
   animation: pop 0.45s var(--ease-spring);
 }
 
-/* hero rotating adjective — each new word rises into place */
 @keyframes word-rise {
   from {
     opacity: 0;
@@ -235,4 +230,21 @@ body {
   html {
     @apply font-sans;
   }
+}
+
+
+.corner-light {
+  background: radial-gradient(
+    farthest-corner at 100% 0,
+    rgb(201 162 75 / 0.32),
+    rgb(201 162 75 / 0.13) 35%,
+    rgb(201 162 75 / 0.05) 70%,
+    transparent
+  );
+  mask-image: conic-gradient(
+    from 180deg at 100% 0,
+    #000 0deg 38deg,
+    transparent 70deg
+  );
+  mix-blend-mode: screen;
 }

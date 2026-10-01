@@ -41,7 +41,6 @@ export function DemoFrame({
   );
 }
 
-// Wireframe placeholders for the app mock-ups.
 export const Line = ({ w = "100%" }: { w?: string }) => (
   <i className="block h-1.5 rounded-full bg-ink/15" style={{ width: w }} />
 );

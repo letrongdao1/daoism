@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-// Each demo loops through a few steps; boxes react to the current step via CSS transitions.
-// Restarts the timer on every step change, so a manual jump gets a full beat before auto-advancing.
+// restarts on every step so a manual jump gets a full beat
 export function useStep(count: number, ms = 5000) {
   const [step, setStep] = useState(0);
   useEffect(() => {
@@ -11,7 +10,7 @@ export function useStep(count: number, ms = 5000) {
   return [step, setStep] as const;
 }
 
-// cn merges conflicting classes (later wins), so `on` reliably overrides `box`
+// cn so `on` overrides `box`
 export { cn as cx } from "@/lib/utils";
 
 export const box =

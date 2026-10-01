@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { card, cx, useStep } from "./lib";
 import { Dot, Img, Line } from "./ui";
 
-// HNB Hub: a black-and-white wireframe of the real app, touring its pages like a screen recording.
 
 function HnbHome() {
   return (
@@ -103,7 +102,6 @@ function HnbEvents() {
   );
 }
 
-// Everyone logs what they paid; at the end it's split evenly and settled.
 const paid = [
   { who: "A", amount: 600 },
   { who: "B", amount: 200 },

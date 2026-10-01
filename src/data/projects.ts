@@ -12,7 +12,6 @@ export type Project = {
   stacks: TechId[];
   tags?: string[];
   bg?: StaticImageData;
-  /** card colors; pick the one that matches the bg image. Defaults to light. */
   theme?: "light" | "dark";
   href?: string;
   isDemoIncluded?: boolean;

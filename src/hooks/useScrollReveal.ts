@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { gsap, ScrollTrigger } from '../lib/gsap'
 
 export function useScrollReveal<T extends HTMLElement>(
-  options: { y?: number; delay?: number; stagger?: number } = {},
+  options: { y?: number; delay?: number; stagger?: number; once?: boolean } = {},
 ) {
   const ref = useRef<T | null>(null)
 
@@ -11,7 +11,9 @@ export function useScrollReveal<T extends HTMLElement>(
     if (!el) return
 
     const targets = el.hasAttribute('data-reveal-group')
-      ? el.querySelectorAll('[data-reveal]')
+      ? [...el.querySelectorAll('[data-reveal]')].filter(
+          (t) => t.closest('[data-reveal-group]') === el,
+        )
       : [el]
 
     const ctx = gsap.context(() => {
@@ -25,7 +27,8 @@ export function useScrollReveal<T extends HTMLElement>(
         scrollTrigger: {
           trigger: el,
           start: 'top 80%',
-          toggleActions: 'play none none reverse',
+          once: options.once,
+          toggleActions: options.once ? 'play none none none' : 'play none none reverse',
         },
       })
     }, el)
@@ -34,7 +37,7 @@ export function useScrollReveal<T extends HTMLElement>(
       ctx.revert()
       ScrollTrigger.getAll().forEach((t) => t.trigger === el && t.kill())
     }
-  }, [options.delay, options.stagger, options.y])
+  }, [options.delay, options.stagger, options.y, options.once])
 
   return ref
 }

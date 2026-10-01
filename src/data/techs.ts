@@ -21,21 +21,22 @@ import vercel from "../assets/icons/techs/vercel.webp";
 import zustand from "../assets/icons/techs/zustand.svg";
 import sqlServer from "../assets/icons/techs/sql-server.png";
 import dotnet from "../assets/icons/techs/dotnet.png";
+import csharp from "../assets/icons/techs/csharp.webp";
+import java from "../assets/icons/techs/java.webp";
+import spring from "../assets/icons/techs/springboot.png";
 import postgre from "../assets/icons/techs/postgre.webp";
+import docker from "../assets/icons/techs/docker.png";
+import redis from "../assets/icons/techs/redis.svg";
 
 export type Tech = {
   name: string;
   icon?: StaticImageData;
-  /** single-color icon: drawn in the surrounding text color instead of as-is */
   mono?: boolean;
 };
 
-// The one place a tech is defined. Projects, the toolbox and the hero refer to these ids,
-// so a new tech (or a new icon) only needs adding here.
 export const techs = {
   typescript: { name: "TypeScript", icon: ts },
   javascript: { name: "JavaScript", icon: js },
-  csharp: { name: "C#" },
   html: { name: "HTML5", icon: html },
   css: { name: "CSS3", icon: css },
   react: { name: "React", icon: react },
@@ -50,11 +51,15 @@ export const techs = {
   nodejs: { name: "Node.js", icon: nodejs },
   nestjs: { name: "NestJS", icon: nestjs },
   aspnet: { name: "ASP.NET", icon: dotnet },
+  csharp: { name: "C#", icon: csharp },
+  java: { name: "Java", icon: java },
+  spring: { name: "Spring Boot", icon: spring },
   sqlserver: { name: "SQL Server", icon: sqlServer },
   postgresql: { name: "PostgreSQL", icon: postgre },
   supabase: { name: "Supabase", icon: supabase },
-  redis: { name: "Redis" },
-  docker: { name: "Docker" },
+  redis: { name: "Redis", icon: redis },
+  docker: { name: "Docker", icon: docker },
+  aws: { name: "AWS", icon: aws },
   awsS3: { name: "AWS S3", icon: aws },
   vercel: { name: "Vercel", icon: vercel },
   cloudflare: { name: "Cloudflare", icon: cloudflare },

@@ -25,8 +25,6 @@ export default function Projects() {
 
       const distance = track.scrollWidth - section.clientWidth;
 
-      // Snap so each project card ends up centered; one scroll moves to the next card.
-      // ponytail: points measured once like `distance`; layout is mostly vw-based so resize drift is small.
       const cards = [
         ...track.querySelectorAll<HTMLElement>("[data-slot=card]"),
       ];
@@ -122,7 +120,7 @@ export default function Projects() {
                 )}
               >
                 {project.bg && (
-                  // wrapped so the <img> isn't the Card's first child (Card drops its top padding for that)
+                  // Card drops top padding when an <img> is its first child
                   <div className="absolute inset-0" aria-hidden="true">
                     <Image
                       src={project.bg}
@@ -131,7 +129,6 @@ export default function Projects() {
                       sizes="(min-width: 768px) 62vw, 100vw"
                       className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
                     />
-                    {/* fade the image out behind the text, in the card's own color */}
                     <div
                       className={cn(
                         "absolute inset-0 bg-linear-to-t from-35% via-55% to-80%",

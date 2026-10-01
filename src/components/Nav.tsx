@@ -10,7 +10,6 @@ export default function Nav() {
     const nav = navRef.current
     let hidden = false
 
-    // slide up out of view while scrolling down, back in on any scroll up
     const trigger = ScrollTrigger.create({
       start: 0,
       end: 'max',

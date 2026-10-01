@@ -20,7 +20,7 @@ export default function ProjectModal({
   project: Project | null;
   onClose: () => void;
 }) {
-  // keep the last project rendered while the close animation plays
+  // keep content during the close animation
   const [shown, setShown] = useState(project);
   if (project && project !== shown) setShown(project);
 
