@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
-import { ScrollTrigger } from "../lib/gsap";
 import TechChip from "./TechChip";
 import type { TechId } from "@/data/techs";
 import { Em } from "./ui/typography";
@@ -45,40 +43,6 @@ export default function About() {
     delay: 0.15,
     once: true,
   });
-
-  useEffect(() => {
-    const section = ref.current;
-    if (!section) return;
-
-    let startY = window.scrollY;
-    const onStart = () => (startY = window.scrollY);
-    ScrollTrigger.addEventListener("scrollStart", onStart);
-
-    const st = ScrollTrigger.create({
-      start: 0,
-      end: "max",
-      snap: {
-        snapTo: (value) => {
-          const max = ScrollTrigger.maxScroll(window);
-          const y = value * max;
-          const top = section.getBoundingClientRect().top + window.scrollY;
-          const vh = window.innerHeight;
-          const approaching =
-            (startY < y && y < top && y > top - vh) ||
-            (startY > y && y > top && y < top + vh);
-          return approaching ? top / max : value;
-        },
-        duration: { min: 0.3, max: 0.6 },
-        delay: 0.05,
-        inertia: false,
-        ease: "power2.inOut",
-      },
-    });
-    return () => {
-      ScrollTrigger.removeEventListener("scrollStart", onStart);
-      st.kill();
-    };
-  }, [ref]);
 
   return (
     <section

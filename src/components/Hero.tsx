@@ -137,7 +137,6 @@ export default function Hero() {
         aria-label={link.label}
         title={link.label}
       >
-        {/* mask so it takes the text color */}
         <span
           className="h-7 w-7 bg-current"
           style={{
@@ -153,17 +152,17 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex min-h-screen py-28 flex-col items-center justify-center overflow-hidden bg-ink"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-ink py-28"
       aria-label="Introduction"
     >
       <div className="layer" aria-hidden="true">
         <div
           ref={blobARef}
-          className="absolute left-[-10%] top-[-10%] h-[55vmax] w-[55vmax] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.14)_0%,transparent_70%)] blur-3xl"
+          className="absolute top-[-10%] left-[-10%] h-[55vmax] w-[55vmax] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.14)_0%,transparent_70%)] blur-3xl"
         />
         <div
           ref={blobBRef}
-          className="absolute bottom-[-15%] right-[-10%] h-[50vmax] w-[50vmax] rounded-full bg-[radial-gradient(circle,rgba(79,184,168,0.1)_0%,transparent_70%)] blur-3xl"
+          className="absolute right-[-10%] bottom-[-15%] h-[50vmax] w-[50vmax] rounded-full bg-[radial-gradient(circle,rgba(79,184,168,0.1)_0%,transparent_70%)] blur-3xl"
         />
       </div>
 
@@ -177,18 +176,17 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-6 md:grid-cols-[1.25fr_1fr] md:px-10">
-        {/* first in DOM so the h1 leads on mobile */}
+      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-4 px-6 md:grid-cols-[1.25fr_1fr] md:gap-12 md:px-10">
         <div className="flex flex-col items-center text-center md:order-last">
           <div data-hero-fade className="relative w-64 sm:w-80 lg:w-96">
             <div
-              className="absolute left-1/2 top-[8%] aspect-square w-[85%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.28)_0%,rgba(201,162,75,0.08)_45%,transparent_70%)]"
+              className="absolute top-[8%] left-1/2 aspect-square w-[85%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.28)_0%,rgba(201,162,75,0.08)_45%,transparent_70%)]"
               aria-hidden="true"
             />
             <img
               src={portrait.src}
               alt="Portrait of Dao Trong Le"
-              className="relative w-full select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
+              className="relative w-full drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] select-none"
               style={{
                 maskImage:
                   "linear-gradient(to bottom, black 60%, transparent 95%)",
@@ -200,37 +198,37 @@ export default function Hero() {
           </div>
           <h1
             data-hero-fade
-            className="relative -mt-20 bg-linear-to-br from-paper via-paper to-accent bg-clip-text font-display text-4xl font-bold uppercase tracking-tight text-transparent drop-shadow-[0_0_30px_rgba(201,162,75,0.25)] sm:text-5xl lg:text-6xl"
+            className="relative -mt-20 bg-linear-to-br from-paper via-paper to-accent bg-clip-text font-display text-4xl font-bold tracking-tight text-transparent uppercase drop-shadow-[0_0_30px_rgba(201,162,75,0.25)] sm:text-5xl lg:text-6xl"
           >
             Dao Trong Le
           </h1>
-          <p
+          <span
             data-hero-fade
-            className="mt-3 text-sm font-medium uppercase tracking-[0.3em] text-accent sm:text-base"
+            className="mt-3 text-sm font-medium tracking-[0.3em] text-accent uppercase sm:text-base"
           >
-            Frontend / Full stack Engineer
-          </p>
+            <p>Frontend / Full stack</p>
+            <p>Software Engineer</p>
+          </span>
         </div>
 
         <div className="flex flex-col items-start text-left">
           <Badge
             data-hero-fade
             variant="outline"
-            className="mb-8 h-auto gap-2 whitespace-normal transition-none border-emerald-400/30 bg-emerald-400/10 px-4 py-1.5 text-xs font-normal text-emerald-300 sm:text-sm"
+            className="mb-8 h-auto gap-2 self-center border-emerald-400/30 bg-emerald-400/10 px-4 py-1.5 text-xs font-normal whitespace-normal text-emerald-300 transition-none sm:text-sm md:self-baseline"
           >
             <span
               className="h-2 w-2 animate-pulse rounded-full bg-emerald-400"
               aria-hidden="true"
             />
-            Open to Frontend roles · HCMC / Remote
+            Open to work · Ho Chi Minh City / Remote
           </Badge>
 
           <p
             data-hero-fade
-            className="font-display text-3xl font-medium leading-tight text-paper lg:text-4xl"
+            className="font-display text-3xl leading-tight font-medium text-paper lg:text-4xl"
           >
             I build <span className="sr-only">clean, reliable</span>
-            {/* all words share one cell so the width never shifts */}
             <span className="inline-grid" aria-hidden="true">
               {adjectives.map((word, i) => (
                 <span
@@ -290,7 +288,7 @@ export default function Hero() {
 
       <div
         ref={cornerIconsRef}
-        className="invisible fixed bottom-6 right-6 z-50 flex items-center gap-2 opacity-0 mix-blend-difference"
+        className="invisible fixed right-6 bottom-6 z-50 flex items-center gap-2 opacity-0 mix-blend-difference"
       >
         {iconLinks}
       </div>

@@ -153,7 +153,7 @@ export default function Projects() {
                 role="article"
                 onClick={() => setOpen(project)}
                 className={cn(
-                  "group relative shrink-0 cursor-pointer rounded-2xl border p-8 ring-0 backdrop-blur-sm transition-colors hover:border-accent/50 md:h-[60vh] md:w-[62vw]",
+                  "group relative shrink-0 cursor-pointer overflow-hidden rounded-2xl border p-6 ring-0 md:p-8 backdrop-blur-sm transition-colors hover:border-accent/50 md:h-[60vh] md:w-[62vw]",
                   dark
                     ? "border-ink bg-ink text-paper"
                     : cn(
@@ -164,7 +164,7 @@ export default function Projects() {
               >
                 {project.bg && (
                   // Card drops top padding when an <img> is its first child
-                  <div className="absolute inset-0" aria-hidden="true">
+                  <div className="absolute inset-x-0 top-0 aspect-[16/10] md:inset-0 md:aspect-auto" aria-hidden="true">
                     <Image
                       src={project.bg}
                       alt=""
@@ -182,7 +182,7 @@ export default function Projects() {
                     />
                   </div>
                 )}
-                <div className="relative flex h-full flex-col justify-end">
+                <div className="relative flex h-full flex-col justify-end max-md:pt-[40vw]">
                   <CardContent className="p-0">
                     <div className="mb-2 flex flex-wrap items-center gap-2">
                       <span
@@ -198,7 +198,7 @@ export default function Projects() {
                           key={tag}
                           variant="outline"
                           className={cn(
-                            "text-[0.7rem] uppercase tracking-wider",
+                            "text-[0.7rem] uppercase tracking-wider max-md:hidden",
                             dark
                               ? "border-paper/25 text-paper/80"
                               : "border-ink/20 text-ink/70",
@@ -210,7 +210,7 @@ export default function Projects() {
                     </div>
                     <h3
                       className={cn(
-                        "font-display text-3xl font-medium transition-colors group-hover:text-accent md:text-5xl",
+                        "font-display text-2xl font-medium transition-colors group-hover:text-accent md:text-5xl",
                         dark ? "text-paper" : "text-ink",
                       )}
                     >
@@ -218,7 +218,7 @@ export default function Projects() {
                     </h3>
                     <CardDescription
                       className={cn(
-                        "mt-4 max-w-lg text-sm md:text-base",
+                        "mt-4 hidden max-w-lg text-base md:block",
                         dark ? "text-paper/80" : "text-ink/60",
                       )}
                     >
@@ -226,7 +226,7 @@ export default function Projects() {
                     </CardDescription>
                     <div
                       className={cn(
-                        "mt-5 flex flex-wrap items-center gap-3 text-xl",
+                        "mt-4 flex flex-wrap items-center gap-3 text-lg md:mt-5 md:text-xl",
                         dark ? "text-paper/80" : "text-ink/70",
                       )}
                     >
@@ -234,12 +234,12 @@ export default function Projects() {
                         <TechChip key={tag} id={tag} iconOnly />
                       ))}
                     </div>
-                    <div className="mt-6 flex flex-wrap items-center gap-6">
+                    <div className="mt-5 flex flex-wrap items-center gap-6 md:mt-6">
                       {project.isDemoIncluded && (
                         <Button
                           variant="link"
                           onClick={() => setOpen(project)}
-                          className="h-auto p-0 text-xs uppercase tracking-[0.3em] text-accent"
+                          className="h-auto p-0 text-xs uppercase tracking-[0.2em] text-accent md:tracking-[0.3em]"
                         >
                           See how it works <span aria-hidden="true">+</span>
                         </Button>
@@ -249,7 +249,7 @@ export default function Projects() {
                           asChild
                           variant="link"
                           className={cn(
-                            "h-auto p-0 text-xs tracking-[0.3em] underline group-hover:text-accent",
+                            "h-auto p-0 text-[0.65rem] underline group-hover:text-accent md:text-xs md:tracking-[0.3em]",
                             dark ? "text-paper/80" : "text-ink/80",
                           )}
                         >
