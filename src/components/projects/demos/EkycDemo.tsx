@@ -70,7 +70,9 @@ export default function EkycDemo() {
         <div
           className={cx(
             "mt-2 rounded-full py-2 text-center text-sm font-bold transition-all duration-500 ease-spring",
-            valid ? "scale-105 bg-accent text-ink shadow-lg shadow-accent/30" : "bg-ink/10 text-ink/40",
+            valid
+              ? "scale-105 bg-accent text-ink shadow-lg shadow-accent/30"
+              : "bg-ink/10 text-ink/40",
           )}
         >
           {valid ? "Open account ✓" : "Open account"}

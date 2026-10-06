@@ -137,7 +137,6 @@ body {
   animation: word-rise 0.45s ease-out;
 }
 
-
 @theme inline {
   --font-heading: var(--font-display);
   --font-sans: var(--font-body);
@@ -216,7 +215,6 @@ body {
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -224,14 +222,14 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-  button:not(:disabled), [role="button"]:not(:disabled) {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
     cursor: pointer;
   }
   html {
     @apply font-sans;
   }
 }
-
 
 .corner-light {
   background: radial-gradient(

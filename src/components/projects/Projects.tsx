@@ -48,7 +48,8 @@ export default function Projects() {
       const cardPoints = points.slice(1, -1);
       const nearest = (p: number) =>
         cardPoints.reduce(
-          (best, q, i) => (Math.abs(q - p) < Math.abs(cardPoints[best] - p) ? i : best),
+          (best, q, i) =>
+            Math.abs(q - p) < Math.abs(cardPoints[best] - p) ? i : best,
           0,
         );
 
@@ -104,11 +105,11 @@ export default function Projects() {
       <section
         ref={sectionRef}
         id="work"
-        className="relative overflow-hidden bg-paper py-24 md:py-0 md:min-h-screen"
+        className="relative overflow-hidden bg-paper py-24 md:min-h-screen md:py-0"
         aria-label="Selected work"
       >
-        <div className="pointer-events-none absolute left-0 top-0 z-10 hidden h-full w-24 bg-linear-to-r from-paper to-transparent md:block" />
-        <div className="pointer-events-none absolute right-0 top-0 z-10 hidden h-full w-24 bg-linear-to-l from-paper to-transparent md:block" />
+        <div className="pointer-events-none absolute top-0 left-0 z-10 hidden h-full w-24 bg-linear-to-r from-paper to-transparent md:block" />
+        <div className="pointer-events-none absolute top-0 right-0 z-10 hidden h-full w-24 bg-linear-to-l from-paper to-transparent md:block" />
 
         {pinned && (
           <div className="absolute bottom-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1">
@@ -124,7 +125,9 @@ export default function Projects() {
                 <span
                   className={cn(
                     "block h-2 rounded-xl transition-all duration-500 ease-spring",
-                    i === active ? "w-10 bg-accent" : "w-3 bg-ink group-hover/dot:bg-ink/60",
+                    i === active
+                      ? "w-10 bg-accent"
+                      : "w-3 bg-ink group-hover/dot:bg-ink/60",
                   )}
                 />
               </button>
@@ -153,7 +156,7 @@ export default function Projects() {
                 role="article"
                 onClick={() => setOpen(project)}
                 className={cn(
-                  "group relative shrink-0 cursor-pointer overflow-hidden rounded-2xl border p-6 ring-0 md:p-8 backdrop-blur-sm transition-colors hover:border-accent/50 md:h-[60vh] md:w-[62vw]",
+                  "group relative shrink-0 cursor-pointer overflow-hidden rounded-2xl border p-6 ring-0 backdrop-blur-sm transition-colors hover:border-accent/50 md:h-[60vh] md:w-[62vw] md:p-8",
                   dark
                     ? "border-ink bg-ink text-paper"
                     : cn(
@@ -164,7 +167,10 @@ export default function Projects() {
               >
                 {project.bg && (
                   // Card drops top padding when an <img> is its first child
-                  <div className="absolute inset-x-0 top-0 aspect-[16/10] md:inset-0 md:aspect-auto" aria-hidden="true">
+                  <div
+                    className="absolute inset-x-0 top-0 aspect-[16/10] md:inset-0 md:aspect-auto"
+                    aria-hidden="true"
+                  >
                     <Image
                       src={project.bg}
                       alt=""
@@ -198,7 +204,7 @@ export default function Projects() {
                           key={tag}
                           variant="outline"
                           className={cn(
-                            "text-[0.7rem] uppercase tracking-wider max-md:hidden",
+                            "text-[0.7rem] tracking-wider uppercase max-md:hidden",
                             dark
                               ? "border-paper/25 text-paper/80"
                               : "border-ink/20 text-ink/70",
@@ -239,7 +245,7 @@ export default function Projects() {
                         <Button
                           variant="link"
                           onClick={() => setOpen(project)}
-                          className="h-auto p-0 text-xs uppercase tracking-[0.2em] text-accent md:tracking-[0.3em]"
+                          className="h-auto p-0 text-xs tracking-[0.2em] text-accent uppercase md:tracking-[0.3em]"
                         >
                           See how it works <span aria-hidden="true">+</span>
                         </Button>

@@ -26,7 +26,7 @@ export default function ProjectDemo({
       <div className="flex items-start justify-between gap-4">
         <Eyebrow>How it works</Eyebrow>
         {isInternal && (
-          <span className="text-right text-xs italic text-ink/50">
+          <span className="text-right text-xs text-ink/50 italic">
             Internal use only · simplified mock-up, real data and UI withheld
           </span>
         )}

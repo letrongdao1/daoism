@@ -15,5 +15,6 @@ export { cn as cx } from "@/lib/utils";
 
 export const box =
   "rounded-2xl border border-ink/15 bg-white/70 px-3 py-2 transition-all duration-500 ease-spring";
-export const on = "scale-[1.04] border-accent bg-accent/20 font-semibold shadow-lg shadow-accent/25";
+export const on =
+  "scale-[1.04] border-accent bg-accent/20 font-semibold shadow-lg shadow-accent/25";
 export const card = "rounded-xl border border-ink/15 bg-ink/[0.04] p-2.5";

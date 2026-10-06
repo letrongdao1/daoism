@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { card, cx, useStep } from "./lib";
 import { Dot, Img, Line } from "./ui";
 
-
 function HnbHome() {
   return (
     <div className="space-y-2.5">
@@ -250,7 +249,9 @@ export default function HnbDemo() {
               onClick={() => setStep(hnbPages.findIndex((p) => p.tab === t))}
               className={cx(
                 "rounded-full px-2.5 py-0.5 font-semibold transition-all duration-300 ease-spring",
-                t === tab ? "scale-105 bg-ink text-white" : "text-ink/50 hover:text-ink",
+                t === tab
+                  ? "scale-105 bg-ink text-white"
+                  : "text-ink/50 hover:text-ink",
               )}
             >
               {t}

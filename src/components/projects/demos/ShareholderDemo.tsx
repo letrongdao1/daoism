@@ -102,7 +102,7 @@ export default function ShareholderDemo() {
                     label === "Residential address" && "sm:col-span-2",
                   )}
                 >
-                  <span className="mb-1 block text-[0.7rem] font-semibold uppercase tracking-wider text-ink/50">
+                  <span className="mb-1 block text-[0.7rem] font-semibold tracking-wider text-ink/50 uppercase">
                     {label}
                   </span>
                   <div className="flex h-8 items-center rounded-lg border border-ink/15 bg-paper px-2.5 text-xs">

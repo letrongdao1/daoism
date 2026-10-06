@@ -29,7 +29,9 @@ export default function ProjectModal({
       {shown && (
         <DialogContent className="max-h-[calc(100dvh-2rem)] w-[min(56rem,calc(100vw-2rem))] max-w-none gap-0 overflow-y-auto rounded-2xl bg-paper p-6 text-ink sm:max-w-none md:p-10">
           <DialogHeader className="gap-1 pr-8">
-            <span className="font-display text-sm text-ink/50">{shown.year}</span>
+            <span className="font-display text-sm text-ink/50">
+              {shown.year}
+            </span>
             <DialogTitle className="font-display text-3xl font-medium md:text-4xl">
               {shown.title}
             </DialogTitle>

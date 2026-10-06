@@ -1,20 +1,25 @@
-import { useEffect, useRef } from 'react'
-import { gsap, ScrollTrigger } from '../lib/gsap'
+import { useEffect, useRef } from "react";
+import { gsap, ScrollTrigger } from "../lib/gsap";
 
 export function useScrollReveal<T extends HTMLElement>(
-  options: { y?: number; delay?: number; stagger?: number; once?: boolean } = {},
+  options: {
+    y?: number;
+    delay?: number;
+    stagger?: number;
+    once?: boolean;
+  } = {},
 ) {
-  const ref = useRef<T | null>(null)
+  const ref = useRef<T | null>(null);
 
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
+    const el = ref.current;
+    if (!el) return;
 
-    const targets = el.hasAttribute('data-reveal-group')
-      ? [...el.querySelectorAll('[data-reveal]')].filter(
-          (t) => t.closest('[data-reveal-group]') === el,
+    const targets = el.hasAttribute("data-reveal-group")
+      ? [...el.querySelectorAll("[data-reveal]")].filter(
+          (t) => t.closest("[data-reveal-group]") === el,
         )
-      : [el]
+      : [el];
 
     const ctx = gsap.context(() => {
       gsap.from(targets, {
@@ -23,21 +28,23 @@ export function useScrollReveal<T extends HTMLElement>(
         duration: 0.9,
         delay: options.delay ?? 0,
         stagger: options.stagger ?? 0.12,
-        ease: 'power3.out',
+        ease: "power3.out",
         scrollTrigger: {
           trigger: el,
-          start: 'top 80%',
+          start: "top 80%",
           once: options.once,
-          toggleActions: options.once ? 'play none none none' : 'play none none reverse',
+          toggleActions: options.once
+            ? "play none none none"
+            : "play none none reverse",
         },
-      })
-    }, el)
+      });
+    }, el);
 
     return () => {
-      ctx.revert()
-      ScrollTrigger.getAll().forEach((t) => t.trigger === el && t.kill())
-    }
-  }, [options.delay, options.stagger, options.y, options.once])
+      ctx.revert();
+      ScrollTrigger.getAll().forEach((t) => t.trigger === el && t.kill());
+    };
+  }, [options.delay, options.stagger, options.y, options.once]);
 
-  return ref
+  return ref;
 }

@@ -54,10 +54,10 @@ export default function About() {
     >
       <div className="grid gap-16 md:grid-cols-2 md:gap-12">
         <div data-reveal>
-          <p className="mb-3 font-display text-xs uppercase tracking-[0.4em] text-accent">
+          <p className="mb-3 font-display text-xs tracking-[0.4em] text-accent uppercase">
             About
           </p>
-          <h2 className="font-display text-4xl font-medium leading-tight text-paper md:text-5xl">
+          <h2 className="font-display text-4xl leading-tight font-medium text-paper md:text-5xl">
             Frontend engineer,
             <br />
             full-stack when needed.
@@ -90,7 +90,7 @@ export default function About() {
               <div key={group.label}>
                 <p
                   data-reveal
-                  className="mb-3 text-xs uppercase tracking-[0.3em] text-paper/40"
+                  className="mb-3 text-xs tracking-[0.3em] text-paper/40 uppercase"
                 >
                   {group.label}
                 </p>
