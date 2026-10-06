@@ -8,23 +8,28 @@ import type { TechId } from "@/data/techs";
 import { Em } from "./ui/typography";
 
 const stack: { label: string; techs: TechId[] }[] = [
-  { label: "Languages", techs: ["typescript", "javascript", "csharp", "java"] },
+  { label: "Languages", techs: ["typescript", "javascript", "java", "csharp"] },
   {
     label: "Frontend",
     techs: [
       "react",
       "nextjs",
+      "vite",
       "redux",
       "zustand",
       "reactQuery",
       "tailwind",
       "motion",
+      "gsap",
     ],
   },
-  { label: "Backend", techs: ["nodejs", "nestjs", "aspnet", "spring"] },
+  {
+    label: "Backend",
+    techs: ["nodejs", "express", "nestjs", "aspnet", "spring"],
+  },
   {
     label: "Databases",
-    techs: ["postgresql", "sqlserver", "supabase", "redis"],
+    techs: ["mysql", "sqlserver", "postgresql", "supabase", "redis"],
   },
   {
     label: "DevOps & tools",
@@ -96,15 +101,17 @@ export default function About() {
           <div className="mt-8 max-w-lg space-y-4 text-base text-paper/65 md:text-lg">
             <p>
               I am a frontend engineer with about <Em>two years</Em> of
-              experience building web applications for a securities firm in Ho
-              Chi Minh City. I craft clean, responsive interfaces with React and
-              Next.js, and I keep production systems reliable for the people
-              who depend on them every day.
+              experience building web applications. I craft clean, responsive
+              interfaces with React using both Vite and Next.js, and I keep
+              production systems reliable for the people who depend on them
+              every day.
             </p>
             <p>
-              I also work on the backend, building APIs with ASP.NET and Node.js
-              on SQL databases, so I can carry a feature from the interface
-              through to the data.
+              I also work on the backend, building APIs with Node.js and ASP.NET
+              on SQL databases, and a solid foundation understanding on Java and
+              Spring Framework. Therefore, I can solely carry a feature from
+              what users see to what make them satisfied using behind the
+              scenes.
             </p>
             <p>
               I use AI tools such as Claude Code to work more efficiently, and I

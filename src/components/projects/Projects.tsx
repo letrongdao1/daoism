@@ -6,6 +6,7 @@ import { gsap, ScrollTrigger } from "../../lib/gsap";
 import { projects, type Project } from "../../data/projects";
 import ProjectModal from "./ProjectModal";
 import TechChip from "../TechChip";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -183,14 +184,30 @@ export default function Projects() {
                 )}
                 <div className="relative flex h-full flex-col justify-end">
                   <CardContent className="p-0">
-                    <span
-                      className={cn(
-                        "mb-1 block font-display text-sm",
-                        dark ? "text-paper/60" : "text-ink/50",
-                      )}
-                    >
-                      {project.year}
-                    </span>
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      <span
+                        className={cn(
+                          "mr-1 font-display text-sm",
+                          dark ? "text-paper/60" : "text-ink/50",
+                        )}
+                      >
+                        {project.year}
+                      </span>
+                      {project.tags?.map((tag) => (
+                        <Badge
+                          key={tag}
+                          variant="outline"
+                          className={cn(
+                            "text-[0.7rem] uppercase tracking-wider",
+                            dark
+                              ? "border-paper/25 text-paper/80"
+                              : "border-ink/20 text-ink/70",
+                          )}
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
                     <h3
                       className={cn(
                         "font-display text-3xl font-medium transition-colors group-hover:text-accent md:text-5xl",

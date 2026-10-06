@@ -2,12 +2,12 @@ import type { ReactNode } from "react";
 import { cx } from "./lib";
 
 export function DemoFrame({
-  steps,
+  steps = [],
   step,
   children,
 }: {
-  steps: string[];
-  step: number;
+  steps?: string[];
+  step?: number;
   children: ReactNode;
 }) {
   return (
@@ -15,28 +15,32 @@ export function DemoFrame({
       <div className="rounded-3xl border border-ink/10 bg-ink/[0.03] bg-[radial-gradient(#05050514_1px,transparent_1px)] bg-size-[14px_14px] p-5 text-sm text-ink">
         {children}
       </div>
-      <ol className="mt-4 space-y-1.5 text-sm" aria-live="polite">
-        {steps.map((s, i) => (
-          <li
-            key={s}
-            className={cx(
-              "flex items-center gap-3 transition-colors duration-500",
-              i === step ? "text-ink" : "text-ink/35",
-            )}
-          >
-            <span
-              key={i === step ? "on" : "off"}
+      {steps.length > 0 && (
+        <ol className="mt-4 space-y-1.5 text-sm" aria-live="polite">
+          {steps.map((s, i) => (
+            <li
+              key={s}
               className={cx(
-                "grid size-6 shrink-0 place-items-center rounded-full text-xs font-bold",
-                i === step ? "pop bg-accent text-ink" : "border border-ink/20",
+                "flex items-center gap-3 transition-colors duration-500",
+                i === step ? "text-ink" : "text-ink/35",
               )}
             >
-              {i + 1}
-            </span>
-            {s}
-          </li>
-        ))}
-      </ol>
+              <span
+                key={i === step ? "on" : "off"}
+                className={cx(
+                  "grid size-6 shrink-0 place-items-center rounded-full text-xs font-bold",
+                  i === step
+                    ? "pop bg-accent text-ink"
+                    : "border border-ink/20",
+                )}
+              >
+                {i + 1}
+              </span>
+              {s}
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   );
 }

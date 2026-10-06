@@ -39,7 +39,9 @@ export default function ProjectModal({
             {shown.description}
           </DialogDescription>
 
-          {shown.isDemoIncluded && <ProjectDemo title={shown.title} />}
+          {shown.isDemoIncluded && (
+            <ProjectDemo title={shown.title} isInternal={shown.isInternal} />
+          )}
 
           <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
             <div className="flex flex-wrap gap-2">

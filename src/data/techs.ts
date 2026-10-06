@@ -6,9 +6,12 @@ import cloudflare from "../assets/icons/techs/cloudflare.webp";
 import css from "../assets/icons/techs/csspng.png";
 import html from "../assets/icons/techs/htmlpng.png";
 import js from "../assets/icons/techs/js.png";
+import gsap from "../assets/icons/techs/gsap.svg";
 import motion from "../assets/icons/techs/motion.svg";
+import express from "../assets/icons/techs/express.svg";
 import nestjs from "../assets/icons/techs/nestjs.webp";
 import nextjs from "../assets/icons/techs/nextjs.webp";
+import vite from "../assets/icons/techs/vite.webp";
 import nodejs from "../assets/icons/techs/nodejswebp.webp";
 import reactQuery from "../assets/icons/techs/react-query.svg";
 import react from "../assets/icons/techs/react.webp";
@@ -19,6 +22,7 @@ import tailwind from "../assets/icons/techs/tailwindsvg.svg";
 import ts from "../assets/icons/techs/ts.png";
 import vercel from "../assets/icons/techs/vercel.webp";
 import zustand from "../assets/icons/techs/zustand.svg";
+import mysql from "../assets/icons/techs/mysql.png";
 import sqlServer from "../assets/icons/techs/sql-server.png";
 import dotnet from "../assets/icons/techs/dotnet.png";
 import csharp from "../assets/icons/techs/csharp.webp";
@@ -40,6 +44,7 @@ export const techs = {
   html: { name: "HTML5", icon: html },
   css: { name: "CSS3", icon: css },
   react: { name: "React", icon: react },
+  vite: { name: "Vite", icon: vite },
   nextjs: { name: "Next.js", icon: nextjs },
   redux: { name: "Redux Toolkit", icon: redux },
   zustand: { name: "Zustand", icon: zustand, mono: true },
@@ -48,12 +53,15 @@ export const techs = {
   shadcn: { name: "shadcn/ui", icon: shadcn },
   antd: { name: "Ant Design", icon: antd },
   motion: { name: "Framer Motion", icon: motion },
+  gsap: { name: "GSAP", icon: gsap },
   nodejs: { name: "Node.js", icon: nodejs },
+  express: { name: "Express.js", icon: express },
   nestjs: { name: "NestJS", icon: nestjs },
   aspnet: { name: "ASP.NET", icon: dotnet },
   csharp: { name: "C#", icon: csharp },
   java: { name: "Java", icon: java },
   spring: { name: "Spring Boot", icon: spring },
+  mysql: { name: "MySQL", icon: mysql },
   sqlserver: { name: "SQL Server", icon: sqlServer },
   postgresql: { name: "PostgreSQL", icon: postgre },
   supabase: { name: "Supabase", icon: supabase },

@@ -1,96 +1,117 @@
-import { box, cx, on, useStep } from "./lib";
-import { DemoFrame } from "./ui";
+import { useEffect, useState } from "react";
+import { cx } from "./lib";
+import { DemoFrame, Line } from "./ui";
 
-const holders = [
-  { id: "SH-01", shares: 5000, vote: "For", present: true },
-  { id: "SH-02", shares: 3000, vote: "For", present: true },
-  { id: "SH-03", shares: 1500, vote: "Against", present: true },
-  { id: "SH-04", shares: 800, vote: "Abstain", present: false },
-  { id: "SH-05", shares: 2500, vote: "For", present: true },
-  { id: "SH-06", shares: 1200, vote: "Against", present: true },
-  { id: "SH-07", shares: 600, vote: "For", present: false },
-  { id: "SH-08", shares: 400, vote: "Abstain", present: true },
-];
-const totalShares = holders.reduce((a, h) => a + h.shares, 0);
-const presentShares = holders
-  .filter((h) => h.present)
-  .reduce((a, h) => a + h.shares, 0);
-const pct = (n: number, of: number) => Math.round((n / of) * 100);
-const results = ["For", "Against", "Abstain"].map((v) => ({
-  v,
-  p: pct(
-    holders
-      .filter((h) => h.present && h.vote === v)
-      .reduce((a, h) => a + h.shares, 0),
-    presentShares,
-  ),
+const holders = [12, 58, 147, 203, 266].map((hue, i) => ({
+  code: `SH-${String(i + 1).padStart(4, "0")}`,
+  hue,
 }));
+type Holder = (typeof holders)[number];
 
-function Bar({ label, value }: { label: string; value: number }) {
+const BASE = 2;
+
+const fields: [string, string][] = [
+  ["Full name", "70%"],
+  ["Shareholder code", ""],
+  ["ID / Passport no.", "60%"],
+  ["Date of birth", "45%"],
+  ["Nationality", "50%"],
+  ["Phone number", "55%"],
+  ["Email address", "80%"],
+  ["Shares held", "35%"],
+  ["Residential address", "75%"],
+  ["Check-in time", "30%"],
+];
+
+function Avatar({ h, size = "size-8" }: { h: Holder; size?: string }) {
   return (
-    <div>
-      <div className="mb-1 flex justify-between text-xs text-ink/60">
-        <span>{label}</span>
-        <span>{value}%</span>
-      </div>
-      <div className="h-2 rounded-full bg-ink/10">
-        <div
-          className="h-full rounded-full bg-accent transition-[width] duration-1000"
-          style={{ width: `${value}%` }}
-        />
-      </div>
-    </div>
+    <span
+      aria-hidden="true"
+      className={cx("shrink-0 rounded-full", size)}
+      style={{ background: `hsl(${h.hue} 55% 55%)` }}
+    />
   );
 }
 
 export default function ShareholderDemo() {
-  const [step] = useStep(4);
+  const [count, setCount] = useState(BASE);
+  const [selected, setSelected] = useState<string | null>(null);
+
+  useEffect(() => {
+    const id = setInterval(
+      () => setCount((c) => (c === holders.length ? BASE : c + 1)),
+      1800,
+    );
+    return () => clearInterval(id);
+  }, []);
+
+  const arrivals = holders.slice(0, count).reverse();
+  const current = arrivals.find((h) => h.code === selected) ?? arrivals[0];
+
   return (
-    <DemoFrame
-      step={step}
-      steps={[
-        "Shareholders arrive at the meeting",
-        "Check-in against the eligibility list sets the quorum",
-        "Votes are weighted by shares held, not by headcount",
-        "Results go live on screen",
-      ]}
-    >
-      <div className="grid gap-5 sm:grid-cols-[1fr_14rem]">
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {holders.map((h) => {
-            const inRoom = step >= 1 && h.present;
-            return (
-              <div
-                key={h.id}
-                className={cx(
-                  box,
-                  "text-xs",
-                  inRoom && on,
-                  step >= 1 && !h.present && "opacity-30",
-                )}
-              >
-                <div className="font-bold">{h.id}</div>
-                <div className="text-ink/60">
-                  {step >= 2 && inRoom ? (
-                    <span key="vote" className="word-rise inline-block">
-                      {h.vote}
-                    </span>
-                  ) : (
-                    `${h.shares.toLocaleString()} sh`
+    <DemoFrame>
+      <div className="grid gap-4 sm:grid-cols-[15rem_1fr]">
+        <div className="rounded-2xl border border-ink/15 bg-white/70 p-3">
+          <div className="mb-2 flex items-center justify-between text-xs">
+            <span className="font-bold">Checked in</span>
+            <span className="flex items-center gap-1.5 text-ink/60">
+              <span className="size-2 animate-pulse rounded-full bg-green-500" />
+              {count} live
+            </span>
+          </div>
+          <ul className="space-y-1.5">
+            {arrivals.map((h) => (
+              <li key={h.code} className="word-rise">
+                <button
+                  type="button"
+                  onClick={() => setSelected(h.code)}
+                  className={cx(
+                    "flex w-full cursor-pointer items-center gap-2.5 rounded-xl border px-2 py-1.5 text-left transition-colors",
+                    h.code === current.code
+                      ? "border-accent bg-accent/20"
+                      : "border-transparent hover:bg-ink/5",
                   )}
-                </div>
-              </div>
-            );
-          })}
+                >
+                  <Avatar h={h} />
+                  <span className="min-w-0 flex-1 space-y-1.5">
+                    <Line w="75%" />
+                    <span className="block text-[0.7rem] font-semibold text-ink/60">
+                      {h.code}
+                    </span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="space-y-3">
-          <Bar
-            label="Quorum"
-            value={step >= 1 ? pct(presentShares, totalShares) : 0}
-          />
-          {results.map((r) => (
-            <Bar key={r.v} label={r.v} value={step === 3 ? r.p : 0} />
-          ))}
+
+        <div className="rounded-2xl border border-ink/15 bg-white/70 p-4">
+          <div key={current.code} className="word-rise">
+            <div className="mb-4 flex items-center gap-3">
+              <Avatar h={current} size="size-12" />
+              <div className="flex-1 space-y-2">
+                <Line w="40%" />
+                <Line w="25%" />
+              </div>
+            </div>
+            <div className="grid gap-x-3 gap-y-2.5 sm:grid-cols-2">
+              {fields.map(([label, w]) => (
+                <div
+                  key={label}
+                  className={cx(
+                    label === "Residential address" && "sm:col-span-2",
+                  )}
+                >
+                  <span className="mb-1 block text-[0.7rem] font-semibold uppercase tracking-wider text-ink/50">
+                    {label}
+                  </span>
+                  <div className="flex h-8 items-center rounded-lg border border-ink/15 bg-paper px-2.5 text-xs">
+                    {w ? <Line w={w} /> : current.code}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </DemoFrame>
