@@ -1,17 +1,11 @@
 "use client";
 
 import { useScrollReveal } from "../hooks/useScrollReveal";
+import { contactLinks, profile } from "@/data/profile";
 import { Button } from "@/components/ui/button";
 import { Eyebrow, Heading } from "@/components/ui/typography";
 
-const links = [
-  { label: "Email", href: "mailto:letrongdaocontact8@gmail.com" },
-  { label: "GitHub", href: "https://github.com/letrongdao1" },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/dao-le-trong-09908b285",
-  },
-];
+const links = [contactLinks.email, contactLinks.github, contactLinks.linkedin];
 
 export default function Contact() {
   const ref = useScrollReveal<HTMLElement>();
@@ -50,7 +44,7 @@ export default function Contact() {
         </div>
 
         <p className="mt-16 text-xs text-ink/30">
-          © {new Date().getFullYear()} Dao Trong Le
+          © {new Date().getFullYear()} {profile.name}
         </p>
       </div>
     </footer>

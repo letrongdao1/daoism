@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { profile } from "@/data/profile";
 
 export const metadata: Metadata = {
-  title: "Dao Trong Le — Software Engineer",
-  description:
-    "Portfolio of Dao Trong Le, software engineer with full-stack experience in React, Next.js, Node.js.",
+  title: `${profile.name} — Software Engineer`,
+  description: profile.description,
   icons: { icon: "/favicon.ico" },
 };
 

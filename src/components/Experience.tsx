@@ -1,41 +1,9 @@
 "use client";
 
 import { useScrollReveal } from "../hooks/useScrollReveal";
+import { timeline } from "@/data/profile";
 import { Badge } from "@/components/ui/badge";
 import { Eyebrow, Heading } from "@/components/ui/typography";
-
-const timeline = [
-  {
-    period: "Since 2026",
-    role: "Master of Information Technology",
-    place: "University of Information Technology, VNU-HCM",
-    isActive: true,
-  },
-  {
-    period: "May 2025 – Jul 2026",
-    role: "Software Engineer",
-    place: "OCBS Securities Joint Stock Company",
-    detail:
-      "Built and maintained the internal MIS, the eKYC account-opening flow and the shareholder meeting portal, working across React, ASP.NET and SQL Server.",
-    isActive: false,
-  },
-  {
-    period: "2023 – 2025",
-    role: "Frontend Developer Intern",
-    place:
-      "Sunshine Software (Mar – Apr 2025) · Digital Era JSC (Sep – Dec 2023)",
-    detail:
-      "Worked with senior engineers to ship product updates and fix UI/UX issues, making the products easier to use, more responsive and more visually consistent.",
-    isActive: false,
-  },
-
-  {
-    period: "2021 – 2025",
-    role: "Bachelor of Software Engineering",
-    place: "FPT University, Ho Chi Minh City · GPA 3.14 / 4.0",
-    isActive: false,
-  },
-];
 
 export default function Experience() {
   const ref = useScrollReveal<HTMLElement>({ stagger: 0.1 });

@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { gsap, ScrollTrigger } from "../../lib/gsap";
 import { projects, type Project } from "../../data/projects";
 import ProjectModal from "./ProjectModal";
 import TechChip from "../TechChip";
@@ -12,98 +11,64 @@ import { Card, CardContent, CardDescription } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Eyebrow, Heading } from "@/components/ui/typography";
 
+// scrollLeft that centers each card, clamped to the scrollable range
+function cardStops(track: HTMLElement) {
+  const max = track.scrollWidth - track.clientWidth;
+  return [...track.querySelectorAll<HTMLElement>("[data-slot=card]")].map(
+    (card) =>
+      Math.min(
+        max,
+        Math.max(
+          0,
+          card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2,
+        ),
+      ),
+  );
+}
+
 export default function Projects() {
-  const sectionRef = useRef<HTMLElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [open, setOpen] = useState<Project | null>(null);
   const [active, setActive] = useState(0);
-  const [pinned, setPinned] = useState(false);
-  const goTo = useRef<(i: number) => void>(() => {});
 
   useEffect(() => {
-    const mm = gsap.matchMedia();
+    const track = trackRef.current!;
+    let lockedUntil = 0;
 
-    mm.add("(min-width: 768px) and (pointer: fine)", () => {
-      const section = sectionRef.current;
-      const track = trackRef.current;
-      if (!section || !track) return;
-
-      const distance = track.scrollWidth - section.clientWidth;
-
-      const cards = [
-        ...track.querySelectorAll<HTMLElement>("[data-slot=card]"),
-      ];
-      const points = [
-        0,
-        ...cards.map((card) =>
-          gsap.utils.clamp(
-            0,
-            1,
-            (card.offsetLeft - (section.clientWidth - card.offsetWidth) / 2) /
-              distance,
-          ),
-        ),
-        1,
-      ];
-      const cardPoints = points.slice(1, -1);
-      const nearest = (p: number) =>
-        cardPoints.reduce(
-          (best, q, i) =>
-            Math.abs(q - p) < Math.abs(cardPoints[best] - p) ? i : best,
-          0,
-        );
-
-      const tween = gsap.to(track, {
-        x: -distance,
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: () => `+=${distance}`,
-          scrub: 0.3,
-          pin: true,
-          invalidateOnRefresh: true,
-          snap: {
-            snapTo: points,
-            directional: true,
-            inertia: false,
-            duration: { min: 0.15, max: 0.35 },
-            delay: 0,
-            ease: "power2.inOut",
-          },
-          onUpdate: (self) => setActive(nearest(self.progress)),
-        },
-      });
-
-      goTo.current = (i) => {
-        const st = tween.scrollTrigger;
-        if (!st) return;
-        window.scrollTo({
-          top: st.start + cardPoints[i] * (st.end - st.start),
-          behavior: "smooth",
-        });
-      };
-      setPinned(true);
-
-      return () => {
-        setPinned(false);
-        tween.scrollTrigger?.kill();
-        tween.kill();
-      };
-    });
-
-    return () => {
-      mm.revert();
-      ScrollTrigger.getAll().forEach(
-        (t) => t.trigger === sectionRef.current && t.kill(),
-      );
+    // one card per shift+wheel notch instead of native ~100px steps fighting the snap
+    const onWheel = (e: WheelEvent) => {
+      if (!e.shiftKey) return;
+      e.preventDefault();
+      if (e.timeStamp < lockedUntil) return;
+      const x = track.scrollLeft;
+      const stops = [0, ...cardStops(track)];
+      const next =
+        Math.sign(e.deltaX || e.deltaY) > 0
+          ? stops.find((s) => s > x + 1)
+          : stops.reverse().find((s) => s < x - 1);
+      if (next === undefined) return;
+      lockedUntil = e.timeStamp + 450;
+      track.scrollTo({ left: next, behavior: "smooth" });
     };
+
+    track.addEventListener("wheel", onWheel, { passive: false });
+    return () => track.removeEventListener("wheel", onWheel);
   }, []);
+
+  const onScroll = () => {
+    const track = trackRef.current!;
+    const offsets = cardStops(track).map((s) => Math.abs(s - track.scrollLeft));
+    setActive(offsets.indexOf(Math.min(...offsets)));
+  };
+
+  const goTo = (i: number) => {
+    const track = trackRef.current!;
+    track.scrollTo({ left: cardStops(track)[i], behavior: "smooth" });
+  };
 
   return (
     <>
       <section
-        ref={sectionRef}
         id="work"
         className="relative overflow-hidden bg-paper py-24 md:min-h-screen md:py-0"
         aria-label="Selected work"
@@ -111,35 +76,34 @@ export default function Projects() {
         <div className="pointer-events-none absolute top-0 left-0 z-10 hidden h-full w-24 bg-linear-to-r from-paper to-transparent md:block" />
         <div className="pointer-events-none absolute top-0 right-0 z-10 hidden h-full w-24 bg-linear-to-l from-paper to-transparent md:block" />
 
-        {pinned && (
-          <div className="absolute bottom-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1">
-            {projects.map((project, i) => (
-              <button
-                key={project.title}
-                type="button"
-                aria-label={`Show ${project.title}`}
-                aria-current={i === active}
-                onClick={() => goTo.current(i)}
-                className="group/dot cursor-pointer p-1.5"
-              >
-                <span
-                  className={cn(
-                    "block h-2 rounded-xl transition-all duration-500 ease-spring",
-                    i === active
-                      ? "w-10 bg-accent"
-                      : "w-3 bg-ink group-hover/dot:bg-ink/60",
-                  )}
-                />
-              </button>
-            ))}
-          </div>
-        )}
+        <div className="absolute bottom-10 left-1/2 z-20 hidden -translate-x-1/2 items-center gap-1 md:flex">
+          {projects.map((project, i) => (
+            <button
+              key={project.title}
+              type="button"
+              aria-label={`Show ${project.title}`}
+              aria-current={i === active}
+              onClick={() => goTo(i)}
+              className="group/dot cursor-pointer p-1.5"
+            >
+              <span
+                className={cn(
+                  "block h-2 rounded-xl transition-all duration-500 ease-spring",
+                  i === active
+                    ? "w-10 bg-accent"
+                    : "w-3 bg-ink group-hover/dot:bg-ink/60",
+                )}
+              />
+            </button>
+          ))}
+        </div>
 
         <div
           ref={trackRef}
-          className="flex flex-col gap-10 px-6 md:h-screen md:w-max md:flex-row md:items-center md:gap-6 md:px-[8vw]"
+          onScroll={onScroll}
+          className="relative flex [scrollbar-width:none] flex-col gap-10 px-6 md:h-screen md:snap-x md:snap-mandatory md:flex-row md:items-center md:gap-6 md:overflow-x-auto md:px-[8vw]"
         >
-          <div className="shrink-0 md:w-[28vw]">
+          <div className="shrink-0 md:w-[28vw] md:snap-start">
             <Eyebrow>Selected Work</Eyebrow>
             <Heading className="text-ink">
               A few things
@@ -156,7 +120,7 @@ export default function Projects() {
                 role="article"
                 onClick={() => setOpen(project)}
                 className={cn(
-                  "group relative shrink-0 cursor-pointer overflow-hidden rounded-2xl border p-6 ring-0 backdrop-blur-sm transition-colors hover:border-accent/50 md:h-[60vh] md:w-[62vw] md:p-8",
+                  "group relative shrink-0 cursor-pointer overflow-hidden rounded-2xl border p-6 ring-0 backdrop-blur-sm transition-colors hover:border-accent/50 md:h-[60vh] md:w-[62vw] md:snap-center md:p-8",
                   dark
                     ? "border-ink bg-ink text-paper"
                     : cn(
@@ -180,7 +144,7 @@ export default function Projects() {
                     />
                     <div
                       className={cn(
-                        "absolute inset-0 bg-linear-to-t from-35% via-55% to-80%",
+                        "absolute inset-0 bg-linear-to-t from-15% via-25% to-50% md:from-35% md:via-55% md:to-80%",
                         dark
                           ? "from-ink via-ink/85 to-ink/0"
                           : "from-paper via-paper/85 to-paper/0",

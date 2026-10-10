@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { gsap, ScrollTrigger } from "../lib/gsap";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { techs, type TechId } from "@/data/techs";
+import { techs } from "@/data/techs";
+import { contactLinks, heroStack, profile } from "@/data/profile";
 import mailIcon from "../assets/icons/mail.png";
 import phoneIcon from "../assets/icons/phone.png";
 import githubIcon from "../assets/icons/github.png";
@@ -12,26 +14,10 @@ import linkedinIcon from "../assets/icons/linkedin.png";
 import portrait from "../assets/images/portrait.png";
 
 const links = [
-  {
-    label: "Email",
-    href: "mailto:letrongdaocontact8@gmail.com",
-    icon: mailIcon,
-  },
-  {
-    label: "Phone",
-    href: "tel:+84582124303",
-    icon: phoneIcon,
-  },
-  {
-    label: "GitHub",
-    href: "https://github.com/letrongdao1",
-    icon: githubIcon,
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/dao-le-trong-09908b285",
-    icon: linkedinIcon,
-  },
+  { ...contactLinks.email, icon: mailIcon },
+  { ...contactLinks.phone, icon: phoneIcon },
+  { ...contactLinks.github, icon: githubIcon },
+  { ...contactLinks.linkedin, icon: linkedinIcon },
 ];
 
 const adjectives = [
@@ -43,8 +29,6 @@ const adjectives = [
   "intuitive",
 ];
 
-const stack: TechId[] = ["typescript", "react", "nextjs", "nodejs", "nestjs"];
-
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const blobARef = useRef<HTMLDivElement | null>(null);
@@ -52,6 +36,11 @@ export default function Hero() {
   const heroIconsRef = useRef<HTMLDivElement | null>(null);
   const cornerIconsRef = useRef<HTMLDivElement | null>(null);
   const [wordIndex, setWordIndex] = useState(0);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   useEffect(() => {
     const id = setInterval(
@@ -75,8 +64,6 @@ export default function Hero() {
       const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
-
-      gsap.set(cornerIconsRef.current, { y: 24 });
 
       ScrollTrigger.create({
         trigger: heroIconsRef.current,
@@ -185,7 +172,7 @@ export default function Hero() {
             />
             <img
               src={portrait.src}
-              alt="Portrait of Dao Trong Le"
+              alt={`Portrait of ${profile.name}`}
               className="relative w-full drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] select-none"
               style={{
                 maskImage:
@@ -200,14 +187,15 @@ export default function Hero() {
             data-hero-fade
             className="relative -mt-20 bg-linear-to-br from-paper via-paper to-accent bg-clip-text font-display text-4xl font-bold tracking-tight text-transparent uppercase drop-shadow-[0_0_30px_rgba(201,162,75,0.25)] sm:text-5xl lg:text-6xl"
           >
-            Dao Trong Le
+            {profile.name}
           </h1>
           <span
             data-hero-fade
             className="mt-3 text-sm font-medium tracking-[0.3em] text-accent uppercase sm:text-base"
           >
-            <p>Frontend / Full stack</p>
-            <p>Software Engineer</p>
+            {profile.roles.map((role) => (
+              <p key={role}>{role}</p>
+            ))}
           </span>
         </div>
 
@@ -221,7 +209,7 @@ export default function Hero() {
               className="h-2 w-2 animate-pulse rounded-full bg-emerald-400"
               aria-hidden="true"
             />
-            Open to work · Ho Chi Minh City / Remote
+            {profile.availability}
           </Badge>
 
           <p
@@ -257,7 +245,7 @@ export default function Hero() {
           </p>
 
           <p data-hero-fade className="mt-6 text-sm text-paper/50">
-            {stack.map((id) => techs[id].name).join(" · ")}
+            {heroStack.map((id) => techs[id].name).join(" · ")}
           </p>
 
           <div data-hero-fade className="mt-10 flex flex-wrap gap-3">
@@ -265,7 +253,7 @@ export default function Hero() {
               asChild
               className="h-auto rounded-full px-6 py-3 font-semibold hover:bg-paper"
             >
-              <a href="/CV_DaoTrongLe.pdf" download>
+              <a href={profile.cv} download>
                 Download CV
               </a>
             </Button>
@@ -286,12 +274,17 @@ export default function Hero() {
         </div>
       </div>
 
-      <div
-        ref={cornerIconsRef}
-        className="invisible fixed right-6 bottom-6 z-50 flex items-center gap-2 opacity-0 mix-blend-difference"
-      >
-        {iconLinks}
-      </div>
+      {mounted &&
+        createPortal(
+          <div
+            ref={cornerIconsRef}
+            className="invisible fixed right-6 bottom-6 z-50 flex items-center gap-2 opacity-0 mix-blend-difference"
+            style={{ transform: "translateY(24px)" }}
+          >
+            {iconLinks}
+          </div>,
+          document.body,
+        )}
     </section>
   );
 }

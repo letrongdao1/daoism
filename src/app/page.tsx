@@ -1,4 +1,5 @@
 import Nav from "../components/Nav";
+import SmoothScroll from "../components/SmoothScroll";
 import Hero from "../components/Hero";
 import Projects from "../components/projects/Projects";
 import About from "../components/About";
@@ -9,13 +10,15 @@ export default function Home() {
   return (
     <>
       <Nav />
-      <main>
-        <Hero />
-        <Projects />
-        <About />
-        <Experience />
-        <Contact />
-      </main>
+      <SmoothScroll>
+        <main>
+          <Hero />
+          <Projects />
+          <About />
+          <Experience />
+          <Contact />
+        </main>
+      </SmoothScroll>
     </>
   );
 }

@@ -1,71 +1,80 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import { gsap, ScrollTrigger } from "../lib/gsap";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import TechChip from "./TechChip";
+import { profile, skills } from "@/data/profile";
 import type { TechId } from "@/data/techs";
 import { Em } from "./ui/typography";
 
-const stack: { label: string; techs: TechId[] }[] = [
-  { label: "Languages", techs: ["typescript", "javascript", "java", "csharp"] },
-  {
-    label: "Frontend",
-    techs: [
-      "react",
-      "nextjs",
-      "vite",
-      "redux",
-      "zustand",
-      "reactQuery",
-      "tailwind",
-      "motion",
-      "gsap",
-    ],
-  },
-  {
-    label: "Backend",
-    techs: ["nodejs", "express", "nestjs", "aspnet", "spring"],
-  },
-  {
-    label: "Databases",
-    techs: ["mysql", "sqlserver", "postgresql", "supabase", "redis"],
-  },
-  {
-    label: "DevOps & tools",
-    techs: ["vercel", "cloudflare", "aws", "claudeCode"],
-  },
+const techsOf = (...labels: string[]): TechId[] =>
+  skills.filter((g) => labels.includes(g.label)).flatMap((g) => g.techs);
+
+const slides = [
+  { label: "Frontend", techs: techsOf("Frontend") },
+  { label: "Backend", techs: techsOf("Backend", "Databases") },
+  { label: "Others", techs: techsOf("Languages", "DevOps & tools") },
 ];
+const STEP = 360 / slides.length;
 
 export default function About() {
   const ref = useScrollReveal<HTMLElement>({ stagger: 0.08 });
-  const stackRef = useScrollReveal<HTMLDivElement>({
-    y: 18,
-    stagger: 0.035,
-    delay: 0.15,
-    once: true,
-  });
+  const ringRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const section = ref.current;
+    if (!section) return;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    // pin for one viewport per extra slide; step the ring as progress crosses each third
+    const trigger = ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: () => `+=${window.innerHeight * (slides.length - 1)}`,
+      pin: true,
+      onUpdate: ({ progress }) => {
+        const i = Math.min(
+          slides.length - 1,
+          Math.floor(progress * slides.length),
+        );
+        setActive(i);
+        gsap.to(ringRef.current, {
+          rotationY: -i * STEP,
+          duration: reduceMotion ? 0 : 0.9,
+          ease: "power3.out",
+          overwrite: true,
+        });
+      },
+    });
+    return () => trigger.kill();
+  }, [ref]);
 
   return (
     <section
       ref={ref}
       id="about"
       data-reveal-group
-      className="relative flex min-h-dvh flex-col justify-center overflow-hidden bg-ink px-6 py-28 md:px-[8vw]"
+      className="relative flex h-dvh flex-col justify-center overflow-hidden bg-ink px-6 py-20 md:px-[8vw]"
       aria-label="About"
     >
-      <div className="grid gap-16 md:grid-cols-2 md:gap-12">
+      <div className="grid items-center gap-10 md:grid-cols-2 md:gap-12">
         <div data-reveal>
           <p className="mb-3 font-display text-xs tracking-[0.4em] text-accent uppercase">
-            About
+            About me
           </p>
-          <h2 className="font-display text-4xl leading-tight font-medium text-paper md:text-5xl">
+          <h2 className="font-display text-3xl leading-tight font-medium text-paper md:text-5xl">
             Frontend engineer,
             <br />
-            full-stack when needed.
+            full-stack oriented.
           </h2>
-          <div className="mt-8 max-w-lg space-y-4 text-base text-paper/65 md:text-lg">
+          <div className="mt-6 max-w-lg space-y-3 text-sm text-paper/65 md:mt-8 md:space-y-4 md:text-lg">
             <p>
-              I am a frontend engineer with about <Em>two years</Em> of
-              experience building web applications. I craft clean, responsive
+              I am a frontend engineer with about <Em>{profile.experience}</Em>{" "}
+              of experience building web applications. I craft clean, responsive
               interfaces with React using both Vite and Next.js, and I keep
               production systems reliable for the people who depend on them
               every day.
@@ -84,27 +93,46 @@ export default function About() {
           </div>
         </div>
 
-        <div ref={stackRef} data-reveal-group>
-          <div className="relative space-y-7">
-            {stack.map((group) => (
-              <div key={group.label}>
-                <p
-                  data-reveal
-                  className="mb-3 text-xs tracking-[0.3em] text-paper/40 uppercase"
-                >
-                  {group.label}
-                </p>
-                <ul className="flex flex-wrap gap-2.5">
-                  {group.techs.map((id) => (
-                    <li key={id} data-reveal>
-                      <TechChip
-                        id={id}
-                        className="rounded-full border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-paper/80"
-                      />
-                    </li>
-                  ))}
-                </ul>
+        <div data-reveal className="flex flex-col items-center gap-6">
+          <div className="relative h-64 w-full max-w-sm perspective-distant md:h-80">
+            {/* pushed back so the front face renders at true size */}
+            <div className="size-full transform-[translateZ(-14rem)] transform-3d">
+              <div ref={ringRef} className="relative size-full transform-3d">
+                {slides.map((slide, i) => (
+                  <div
+                    key={slide.label}
+                    aria-hidden={i !== active}
+                    className="absolute inset-0 flex flex-col rounded-3xl border border-white/10 bg-white/3 p-6 backdrop-blur-sm backface-hidden md:p-8"
+                    style={{
+                      transform: `rotateY(${i * STEP}deg) translateZ(14rem)`,
+                    }}
+                  >
+                    <p className="mb-5 font-display text-xs tracking-[0.3em] text-accent uppercase">
+                      {String(i + 1).padStart(2, "0")} — {slide.label}
+                    </p>
+                    <ul className="flex flex-wrap gap-2.5">
+                      {slide.techs.map((id) => (
+                        <li key={id}>
+                          <TechChip
+                            id={id}
+                            className="rounded-full border-white/10 bg-white/3 px-4 py-2 text-sm text-paper/80"
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
+            </div>
+          </div>
+          <div className="flex gap-2" aria-hidden="true">
+            {slides.map((slide, i) => (
+              <span
+                key={slide.label}
+                className={`h-1 rounded-full transition-all duration-500 ${
+                  i === active ? "w-8 bg-accent" : "w-3 bg-white/20"
+                }`}
+              />
             ))}
           </div>
         </div>
