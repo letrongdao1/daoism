@@ -32,10 +32,11 @@ export const heroStack: TechId[] = [
 ];
 
 export const skills: { label: string; techs: TechId[] }[] = [
-  { label: "Languages", techs: ["typescript", "javascript", "java", "csharp"] },
   {
     label: "Frontend",
     techs: [
+      "typescript",
+      "javascript",
       "react",
       "nextjs",
       "vite",
@@ -49,7 +50,15 @@ export const skills: { label: string; techs: TechId[] }[] = [
   },
   {
     label: "Backend",
-    techs: ["nodejs", "express", "nestjs", "aspnet", "spring"],
+    techs: [
+      "java",
+      "csharp",
+      "nodejs",
+      "express",
+      "nestjs",
+      "aspnet",
+      "spring",
+    ],
   },
   {
     label: "Databases",

@@ -1,67 +1,111 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { gsap, ScrollTrigger } from "../lib/gsap";
+import type { COBEOptions } from "cobe";
+import { Popover } from "radix-ui";
+import { ScrollTrigger } from "../lib/gsap";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import TechChip from "./TechChip";
 import { profile, skills } from "@/data/profile";
-import type { TechId } from "@/data/techs";
+import { techs, type TechId } from "@/data/techs";
 import { Em } from "./ui/typography";
+import { Globe } from "./ui/globe";
+import { OrbitingCircles } from "./ui/orbiting-circles";
 
 const techsOf = (...labels: string[]): TechId[] =>
   skills.filter((g) => labels.includes(g.label)).flatMap((g) => g.techs);
 
-const slides = [
-  { label: "Frontend", techs: techsOf("Frontend") },
-  { label: "Backend", techs: techsOf("Backend", "Databases") },
-  { label: "Others", techs: techsOf("Languages", "DevOps & tools") },
+const ORBIT_SIZE = 800;
+
+const rings = [
+  { label: "Others", radius: 160, techs: techsOf("DevOps & tools") },
+  { label: "Databases", radius: 230, techs: techsOf("Databases") },
+  { label: "Backend", radius: 300, techs: techsOf("Backend") },
+  { label: "Frontend", radius: 370, techs: techsOf("Frontend") },
 ];
-const STEP = 360 / slides.length;
+
+const GLOBE_CONFIG: COBEOptions = {
+  width: 800,
+  height: 800,
+  onRender: () => {},
+  devicePixelRatio: 2,
+  phi: 0,
+  theta: 0.3,
+  dark: 1,
+  diffuse: 1.2,
+  mapSamples: 16000,
+  mapBrightness: 6,
+  baseColor: [0.3, 0.3, 0.3],
+  markerColor: [201 / 255, 162 / 255, 75 / 255],
+  glowColor: [0.25, 0.2, 0.1],
+  markers: [{ location: [10.8231, 106.6297], size: 0.08 }],
+};
+
+function OrbitTech({ id }: { id: TechId }) {
+  const [open, setOpen] = useState(false);
+  const hover = (next: boolean) => (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse") setOpen(next);
+  };
+
+  return (
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Trigger
+        aria-label={techs[id].name}
+        className="flex size-full cursor-pointer items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        onPointerEnter={hover(true)}
+        onPointerLeave={hover(false)}
+        onClick={(e) => {
+          // hover already opened it; don't let the click toggle it shut
+          if ((e.nativeEvent as PointerEvent).pointerType === "mouse")
+            e.preventDefault();
+        }}
+      >
+        <TechChip id={id} iconOnly nativeTitle={false} />
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          side="top"
+          sideOffset={10}
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          className="z-50 flex animate-in flex-col items-center rounded-xl border border-accent/30 bg-ink/90 px-3.5 py-2 text-center shadow-lg shadow-accent/10 backdrop-blur-md fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+        >
+          <span className="text-sm text-paper">{techs[id].name}</span>
+          <Popover.Arrow className="fill-accent/40" />
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  );
+}
 
 export default function About() {
   const ref = useScrollReveal<HTMLElement>({ stagger: 0.08 });
-  const ringRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
+  const orbitRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const section = ref.current;
-    if (!section) return;
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    // pin for one viewport per extra slide; step the ring as progress crosses each third
-    const trigger = ScrollTrigger.create({
-      trigger: section,
-      start: "top top",
-      end: () => `+=${window.innerHeight * (slides.length - 1)}`,
-      pin: true,
-      onUpdate: ({ progress }) => {
-        const i = Math.min(
-          slides.length - 1,
-          Math.floor(progress * slides.length),
-        );
-        setActive(i);
-        gsap.to(ringRef.current, {
-          rotationY: -i * STEP,
-          duration: reduceMotion ? 0 : 0.9,
-          ease: "power3.out",
-          overwrite: true,
-        });
-      },
+    const el = orbitRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const scale = Math.min(
+        1,
+        Math.max(0.45, entry.contentRect.width / ORBIT_SIZE),
+      );
+      el.style.setProperty("--orbit-scale", String(scale));
+      // the orbit changes the page height, so later triggers need new positions
+      ScrollTrigger.refresh();
     });
-    return () => trigger.kill();
-  }, [ref]);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section
       ref={ref}
       id="about"
       data-reveal-group
-      className="relative flex h-dvh flex-col justify-center overflow-hidden bg-ink px-6 py-20 md:px-[8vw]"
+      className="relative flex min-h-dvh flex-col justify-center overflow-hidden bg-ink px-6 py-20 md:px-[8vw]"
       aria-label="About"
     >
-      <div className="grid items-center gap-10 md:grid-cols-2 md:gap-12">
+      <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[minmax(0,30rem)_minmax(0,1fr)] lg:gap-12">
         <div data-reveal>
           <p className="mb-3 font-display text-xs tracking-[0.4em] text-accent uppercase">
             About me
@@ -93,46 +137,28 @@ export default function About() {
           </div>
         </div>
 
-        <div data-reveal className="flex flex-col items-center gap-6">
-          <div className="relative h-64 w-full max-w-sm perspective-distant md:h-80">
-            {/* pushed back so the front face renders at true size */}
-            <div className="size-full transform-[translateZ(-14rem)] transform-3d">
-              <div ref={ringRef} className="relative size-full transform-3d">
-                {slides.map((slide, i) => (
-                  <div
-                    key={slide.label}
-                    aria-hidden={i !== active}
-                    className="absolute inset-0 flex flex-col rounded-3xl border border-white/10 bg-white/3 p-6 backdrop-blur-sm backface-hidden md:p-8"
-                    style={{
-                      transform: `rotateY(${i * STEP}deg) translateZ(14rem)`,
-                    }}
-                  >
-                    <p className="mb-5 font-display text-xs tracking-[0.3em] text-accent uppercase">
-                      {String(i + 1).padStart(2, "0")} — {slide.label}
-                    </p>
-                    <ul className="flex flex-wrap gap-2.5">
-                      {slide.techs.map((id) => (
-                        <li key={id}>
-                          <TechChip
-                            id={id}
-                            className="rounded-full border-white/10 bg-white/3 px-4 py-2 text-sm text-paper/80"
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
+        <div
+          ref={orbitRef}
+          data-reveal
+          className="group/orbit flex min-w-0 justify-center lg:mr-[-8vw]"
+        >
+          <div className="relative flex size-[calc(800px*var(--orbit-scale,1))] shrink-0 items-center justify-center">
+            <div className="absolute top-1/2 left-1/2 size-[calc(220px*var(--orbit-scale,1))] -translate-1/2">
+              <Globe config={GLOBE_CONFIG} />
             </div>
-          </div>
-          <div className="flex gap-2" aria-hidden="true">
-            {slides.map((slide, i) => (
-              <span
-                key={slide.label}
-                className={`h-1 rounded-full transition-all duration-500 ${
-                  i === active ? "w-8 bg-accent" : "w-3 bg-white/20"
-                }`}
-              />
+            {rings.map((ring, i) => (
+              <OrbitingCircles
+                key={ring.label}
+                radius={ring.radius}
+                duration={30 + i * 10}
+                reverse={i % 2 === 1}
+                iconSize={56}
+                className="border border-white/10 bg-ink/80 text-[calc(1.875rem*max(var(--orbit-scale,1),0.6))] text-paper/80 backdrop-blur-sm group-has-data-[state=open]/orbit:paused motion-reduce:paused"
+              >
+                {ring.techs.map((id) => (
+                  <OrbitTech key={id} id={id} />
+                ))}
+              </OrbitingCircles>
             ))}
           </div>
         </div>

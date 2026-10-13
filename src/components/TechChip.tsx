@@ -6,10 +6,12 @@ import { techs, type Tech, type TechId } from "@/data/techs";
 export default function TechChip({
   id,
   iconOnly = false,
+  nativeTitle = true,
   className,
 }: {
   id: TechId;
   iconOnly?: boolean;
+  nativeTitle?: boolean;
   className?: string;
 }) {
   const { name, icon, mono }: Tech = techs[id];
@@ -42,7 +44,7 @@ export default function TechChip({
   if (iconOnly && iconEl) {
     return (
       <span
-        title={name}
+        title={nativeTitle ? name : undefined}
         className={cn(
           "group/tech inline-flex transition-transform duration-300 ease-spring hover:-translate-y-1",
           className,
