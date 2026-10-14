@@ -2,14 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CheckIcon, CopyIcon } from "lucide-react";
-import { gsap, ScrollTrigger } from "../lib/gsap";
+import { gsap, SplitText } from "../lib/gsap";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import { contactLinks, profile } from "@/data/profile";
 import { Button } from "@/components/ui/button";
-import { Eyebrow } from "@/components/ui/typography";
+import { Eyebrow, Heading } from "@/components/ui/typography";
 
 const links = [contactLinks.github, contactLinks.linkedin];
-const PHRASE = "Let's build something";
 
 const localTime = () =>
   new Intl.DateTimeFormat("en-GB", {
@@ -65,64 +64,35 @@ function CopyEmail() {
 
 export default function Contact() {
   const ref = useScrollReveal<HTMLElement>();
-  const trackRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // two identical halves, so sliding by -50% loops seamlessly
-    const loop = gsap.to(track, {
-      xPercent: -50,
-      duration: 30,
-      ease: "none",
-      repeat: -1,
-    });
-    // start far in so scrolling up can run it backwards
-    loop.totalTime(loop.duration() * 100);
-
-    const trigger = ScrollTrigger.create({
-      trigger: track,
-      start: "top bottom",
-      end: "bottom top",
-      onUpdate: (self) => {
-        const boost = Math.min(6, 1 + Math.abs(self.getVelocity()) / 300);
-        gsap.to(loop, {
-          timeScale: self.direction * boost,
-          duration: 0.2,
-          overwrite: true,
-          onComplete: () => {
-            gsap.to(loop, { timeScale: self.direction, duration: 1 });
-          },
-        });
-      },
+    const split = SplitText.create(headingRef.current!, {
+      type: "lines,words",
+      mask: "lines",
+      autoSplit: true,
+      onSplit: (self) =>
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: self.elements[0],
+              start: "top 85%",
+              end: "bottom 40%",
+              scrub: 1,
+            },
+          })
+          .from(self.lines, { yPercent: 110, stagger: 0.15, duration: 0.6 })
+          .from(
+            self.words,
+            { opacity: 0.15, stagger: 0.1, ease: "none", duration: 0.3 },
+            0.2,
+          ),
     });
 
-    return () => {
-      trigger.kill();
-      loop.kill();
-    };
+    return () => split.revert();
   }, []);
-
-  const half = (
-    <span className="flex shrink-0 items-center">
-      {Array.from({ length: 3 }, (_, i) => (
-        <span key={i} className="flex items-center">
-          <span
-            className={
-              i % 2
-                ? "text-transparent [-webkit-text-stroke:1px_var(--color-paper)]"
-                : ""
-            }
-          >
-            {PHRASE}
-          </span>
-          <span className="mx-[0.35em] text-accent">✦</span>
-        </span>
-      ))}
-    </span>
-  );
 
   return (
     <footer
@@ -138,20 +108,15 @@ export default function Contact() {
 
       <div className="relative z-10 flex w-full flex-col items-center">
         <Eyebrow className="mb-6">Get in touch</Eyebrow>
-        <h2 className="sr-only">{PHRASE}.</h2>
-
-        <div aria-hidden="true" className="w-full overflow-hidden py-2">
-          <div
-            ref={trackRef}
-            className="flex w-max font-display text-[16vw] leading-none font-medium whitespace-nowrap text-paper md:text-[11vw]"
-          >
-            {half}
-            {half}
-          </div>
-        </div>
+        <Heading
+          ref={headingRef}
+          className="max-w-4xl px-6 text-paper md:text-6xl"
+        >
+          Every opportunity is a hidden treasure.
+        </Heading>
 
         <div className="mt-10 flex w-full flex-col items-center gap-6 px-6 md:mt-14">
-          <p className="flex flex-col items-center gap-x-3 gap-y-1.5 text-xs tracking-[0.1em] text-paper/60 uppercase md:flex-row md:text-sm md:tracking-[0.2em]">
+          <p className="flex flex-col items-center gap-x-3 gap-y-1.5 text-xs tracking-widest text-paper/60 uppercase md:flex-row md:text-sm md:tracking-[0.2em]">
             <span className="inline-flex items-center gap-3">
               <span className="relative flex size-2 shrink-0">
                 <span className="absolute inset-0 animate-ping rounded-full bg-accent/70" />
@@ -175,7 +140,9 @@ export default function Contact() {
                 variant="link"
                 className="h-auto p-0 text-sm tracking-[0.3em] text-paper/70 uppercase hover:text-accent hover:no-underline"
               >
-                <a href={link.href}>{link.label}</a>
+                <a href={link.href} target="_blank">
+                  {link.label}
+                </a>
               </Button>
             ))}
           </div>

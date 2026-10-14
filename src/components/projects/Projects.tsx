@@ -101,7 +101,7 @@ export default function Projects() {
         <div
           ref={trackRef}
           onScroll={onScroll}
-          className="relative flex [scrollbar-width:none] flex-col gap-10 px-6 md:h-screen md:snap-x md:snap-mandatory md:flex-row md:items-center md:gap-6 md:overflow-x-auto md:px-[8vw]"
+          className="relative flex [scrollbar-width:none] flex-col gap-10 px-6 md:h-screen md:snap-x md:snap-mandatory md:scroll-px-[8vw] md:flex-row md:items-center md:gap-6 md:overflow-x-auto md:px-[8vw]"
         >
           <div className="shrink-0 md:w-[28vw] md:snap-start">
             <Eyebrow>Selected Work</Eyebrow>
