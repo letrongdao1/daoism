@@ -69,7 +69,7 @@ export default function About() {
           data-reveal
           href={profile.cv}
           download
-          className="self-start font-display text-lg tracking-wide underline underline-offset-8 transition-colors hover:text-accent"
+          className="self-start font-title text-lg tracking-wide underline underline-offset-8 transition-colors hover:text-accent"
         >
           Download my CV
         </a>

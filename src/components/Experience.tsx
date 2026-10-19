@@ -31,7 +31,7 @@ export default function Experience() {
           className="flex flex-col justify-between gap-8 border-t border-ink/10 px-5 py-10 lg:w-[26vw] lg:border-t-0 lg:border-l lg:p-(--vg)"
         >
           <div className="flex flex-col gap-2">
-            <span className="font-display text-sm text-ink/50">
+            <span className="font-title text-sm text-ink/50">
               {item.period}
             </span>
             {item.isActive && (
@@ -41,7 +41,7 @@ export default function Experience() {
             )}
           </div>
           <div>
-            <h3 className="font-display text-2xl font-medium xl:text-3xl">
+            <h3 className="font-title text-2xl xl:text-3xl">
               {item.role}
             </h3>
             <p className="mt-2 text-sm text-ink/60">{item.place}</p>

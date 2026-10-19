@@ -1,47 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import {
-  ArrowRightIcon,
-  LoaderCircle,
-  Menu,
-  Mouse,
-  Star,
-  Type,
-  type LucideIcon,
-} from "lucide-react";
+import { useEffect, useRef } from "react";
+import { ArrowRightIcon } from "lucide-react";
 import { gsap } from "../lib/gsap";
 import { storyTween } from "../lib/story";
 import LocalTime from "./LocalTime";
 import { Button } from "@/components/ui/button";
 import { profile } from "@/data/profile";
-
-const pronouns = [
-  "a software engineer",
-  "a teamate",
-  "a colleague",
-  "a friend",
-];
-
-// keyed by letter position in the name, spaces skipped
-// crops the icon's 24px box to its drawn bounds and scales the stroke with it,
-// so at cap height every glyph has the same stem weight as the letters
-const glyph = (Icon: LucideIcon, [x, y, w, h]: number[]) => {
-  const s = h * 0.32;
-  return {
-    Icon,
-    strokeWidth: s,
-    viewBox: `${x - s / 2} ${y - s / 2} ${w + s} ${h + s}`,
-  };
-};
-
-const glyphs: Record<number, ReturnType<typeof glyph>> = {
-  1: glyph(Star, [2.1, 2, 19.8, 19.1]),
-  2: glyph(Mouse, [5, 2, 14, 20]),
-  4: glyph(Menu, [4, 5, 16, 14]),
-  5: glyph(Type, [4, 4, 16, 16]),
-  7: glyph(LoaderCircle, [3, 3, 18, 18]),
-};
 
 // each letter flies in from off-screen, one direction per letter
 const entrances: gsap.TweenVars[] = [
@@ -57,27 +22,18 @@ const entrances: gsap.TweenVars[] = [
   { y: "-100vh" },
 ];
 
-const craft = ["Pure", "Motion with purpose", "Details, end to end"];
-
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const blobARef = useRef<HTMLDivElement | null>(null);
   const blobBRef = useRef<HTMLDivElement | null>(null);
   const nameWrapRef = useRef<HTMLDivElement | null>(null);
   const nameRef = useRef<HTMLHeadingElement | null>(null);
-  const [wordIndex, setWordIndex] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(
-      () => setWordIndex((i) => (i + 1) % pronouns.length),
-      2200,
-    );
-    return () => clearInterval(id);
-  }, []);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      document.documentElement.classList.add("intro-ready");
+    // once per page load: kept out of the context so a remount (strict mode, fast refresh) neither kills nor replays it
+    const html = document.documentElement;
+    if (!html.classList.contains("intro-ready")) {
+      html.classList.add("intro-ready");
       const intro = gsap.timeline({ delay: 0.3 });
       if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         gsap.utils.toArray<HTMLElement>("[data-letter]").forEach((el, i) => {
@@ -89,7 +45,7 @@ export default function Hero() {
         });
       }
       intro.from(
-        document.querySelectorAll("[data-intro]"),
+        "[data-intro]",
         { opacity: 0, duration: 1.2, ease: "power1.out" },
         ">-0.2",
       );
@@ -98,7 +54,9 @@ export default function Hero() {
         { opacity: 0, y: 16, duration: 0.9, ease: "power2.out", stagger: 0.08 },
         "<0.2",
       );
+    }
 
+    const ctx = gsap.context(() => {
       const story = storyTween();
       if (story) {
         const wrap = nameWrapRef.current!;
@@ -189,37 +147,18 @@ export default function Hero() {
       >
         <h1
           ref={nameRef}
-          className="font-grotesk text-[17vw] leading-[0.85] font-medium tracking-tight text-paper uppercase lg:text-[min(18vh,11vw)]"
+          className="font-title text-[17vw] leading-[0.85] tracking-tight text-paper uppercase lg:text-[min(18vh,11vw)]"
         >
           <span className="sr-only">{profile.name}</span>
-          {profile.name.split(" ").map((word, w, words) => {
-            const offset = words.slice(0, w).join("").length;
-            return (
-              <span key={word} className="block" aria-hidden="true">
-                {[...word].map((letter, l) => {
-                  const g = glyphs[offset + l];
-                  return (
-                    <span
-                      key={l}
-                      data-letter
-                      className={`inline-block ${g ? "" : "font-lucky"}`}
-                    >
-                      {g ? (
-                        <g.Icon
-                          strokeWidth={g.strokeWidth}
-                          viewBox={g.viewBox}
-                          fill={g.Icon === Star ? "currentColor" : "none"}
-                          className="mx-[0.05em] inline-block h-[0.7em] w-auto align-baseline"
-                        />
-                      ) : (
-                        letter
-                      )}
-                    </span>
-                  );
-                })}
-              </span>
-            );
-          })}
+          {profile.name.split(" ").map((word) => (
+            <span key={word} className="block" aria-hidden="true">
+              {[...word].map((letter, l) => (
+                <span key={l} data-letter className="inline-block">
+                  {letter}
+                </span>
+              ))}
+            </span>
+          ))}
         </h1>
       </div>
 
@@ -228,41 +167,16 @@ export default function Hero() {
           data-hero-fade
           className="text-xs tracking-[0.3em] text-accent uppercase"
         >
-          {profile.roles.join(" · ")}
+          {profile.role}
         </p>
-        <p
-          data-hero-fade
-          className="grid font-display text-[12vw] leading-[0.9] whitespace-nowrap text-accent lg:text-[min(17vh,6vw)]"
-        >
-          <span className="sr-only">{pronouns.join(", ")}</span>
-          {pronouns.map((word, i) => (
-            <span
-              key={`${word}-${i === wordIndex}`}
-              aria-hidden="true"
-              className={`col-start-1 row-start-1 ${
-                i === wordIndex ? "word-rise" : "invisible"
-              }`}
-            >
-              {word}
-            </span>
-          ))}
-        </p>
-        <ol
-          data-hero-fade
-          className="mt-6 flex flex-col gap-3 text-lg lg:text-2xl"
-        >
-          {craft.map((line, i) => (
-            <li
-              key={line}
-              className="flex items-baseline gap-4 border-t border-paper/10 pt-3 text-paper/80"
-            >
-              <span className="font-grotesk text-sm text-paper/40 tabular-nums">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              {line}
-            </li>
-          ))}
-        </ol>
+        <div data-hero-fade className="flex flex-col gap-5">
+          <p className="font-title text-[14vw] leading-[0.95] text-accent lg:text-[min(12vh,4.2vw)]">
+            Any layer. Any stack.
+          </p>
+          <p className="text-lg text-paper/60 lg:text-xl">
+            Curious enough to learn it, careful enough to ship it.
+          </p>
+        </div>
       </div>
 
       <div
@@ -299,7 +213,7 @@ export default function Hero() {
 
       <p
         data-hero-fade
-        className="absolute right-16 bottom-(--vg) hidden items-center gap-3 font-display text-xs tracking-[0.4em] text-paper/60 uppercase lg:flex"
+        className="absolute right-16 bottom-(--vg) hidden items-center gap-3 font-title text-xs tracking-[0.4em] text-paper/60 uppercase lg:flex"
       >
         Scroll <ArrowRightIcon className="size-4" />
       </p>

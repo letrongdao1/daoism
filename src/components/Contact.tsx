@@ -30,7 +30,7 @@ function CopyEmail() {
     <button
       type="button"
       onClick={copy}
-      className="group inline-flex max-w-full cursor-pointer items-center gap-3 rounded-full border border-white/10 bg-white/3 px-5 py-3 font-display text-base text-paper transition-colors hover:border-accent/50 md:px-7 md:py-4 md:text-2xl"
+      className="group inline-flex max-w-full cursor-pointer items-center gap-3 rounded-full border border-white/10 bg-white/3 px-5 py-3 font-title text-base text-paper transition-colors hover:border-accent/50 md:px-7 md:py-4 md:text-2xl"
     >
       <span className="truncate">{email}</span>
       <span className="grid size-8 shrink-0 place-items-center rounded-full bg-accent/15 text-accent transition-transform group-hover:scale-110 md:size-10">

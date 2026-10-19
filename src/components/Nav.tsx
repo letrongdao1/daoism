@@ -92,7 +92,7 @@ export default function Nav() {
 
       <a
         href="#"
-        className="font-display text-sm tracking-[0.3em] uppercase lg:rotate-180 lg:[writing-mode:vertical-rl]"
+        className="font-title text-sm tracking-[0.3em] uppercase lg:rotate-180 lg:[writing-mode:vertical-rl]"
       >
         daoism
       </a>
@@ -148,10 +148,10 @@ export default function Nav() {
                         setOpen(false);
                       }}
                     >
-                      <span className="font-display text-[0.25em] text-paper/40 tabular-nums">
+                      <span className="font-title text-[0.25em] text-paper/40 tabular-nums">
                         {String(i + 1).padStart(2, "0")}
                       </span>
-                      <span className="font-display font-medium tracking-tight uppercase opacity-30 transition group-hover:text-accent group-hover:opacity-100">
+                      <span className="font-title font-medium tracking-tight uppercase opacity-30 transition group-hover:text-accent group-hover:opacity-100">
                         {link.label}
                       </span>
                     </a>

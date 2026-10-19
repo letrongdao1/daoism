@@ -43,10 +43,10 @@ export default function Projects() {
                     i === active && "lg:text-accent",
                   )}
                 >
-                  <span className="font-display text-2xl font-medium lg:text-[min(5.5vh,3.2vw)] lg:leading-tight">
+                  <span className="font-title text-2xl lg:text-[min(5.5vh,3.2vw)] lg:leading-tight">
                     {project.title}
                   </span>
-                  <span className="shrink-0 font-display text-xs text-paper/50 tabular-nums">
+                  <span className="shrink-0 font-title text-xs text-paper/50 tabular-nums">
                     {project.year}
                   </span>
                 </button>

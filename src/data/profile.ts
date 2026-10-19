@@ -2,7 +2,7 @@ import type { TechId } from "./techs";
 
 export const profile = {
   name: "Dao Le Trong",
-  roles: ["Frontend / Full stack", "Software Engineer"],
+  role: "Fullstack Software Engineer",
   availability: "Open to work · Ho Chi Minh City / Remote",
   experience: "two years",
   description:
