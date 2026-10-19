@@ -1,18 +1,46 @@
 "use client";
 
 import { useLayoutEffect } from "react";
-import { ScrollSmoother } from "../lib/gsap";
+import { gsap, ScrollSmoother } from "../lib/gsap";
+import { setStory } from "../lib/story";
 
-// layout effect so the smoother exists before children create their ScrollTriggers
+// layout effect so the smoother and story exist before children create their ScrollTriggers
 export default function SmoothScroll({
   children,
 }: {
   children: React.ReactNode;
 }) {
   useLayoutEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const smoother = ScrollSmoother.create({ smooth: 0.8 });
-    return () => smoother.kill();
+    const smoother = window.matchMedia("(prefers-reduced-motion: reduce)")
+      .matches
+      ? null
+      : ScrollSmoother.create({ smooth: 0.8 });
+
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 1024px)", () => {
+      const track = document.querySelector<HTMLElement>("[data-story-track]")!;
+      const distance = () =>
+        track.scrollWidth - document.documentElement.clientWidth;
+      setStory(
+        gsap.to(track, {
+          x: () => -distance(),
+          ease: "none",
+          scrollTrigger: {
+            trigger: track,
+            pin: true,
+            scrub: true,
+            end: () => `+=${distance()}`,
+            invalidateOnRefresh: true,
+          },
+        }),
+      );
+      return () => setStory(null);
+    });
+
+    return () => {
+      mm.revert();
+      smoother?.kill();
+    };
   }, []);
 
   return (

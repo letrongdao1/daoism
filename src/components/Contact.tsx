@@ -4,28 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { gsap, SplitText } from "../lib/gsap";
 import { useScrollReveal } from "../hooks/useScrollReveal";
+import { enterTrigger, storyTween } from "../lib/story";
+import LocalTime from "./LocalTime";
 import { contactLinks, profile } from "@/data/profile";
 import { Button } from "@/components/ui/button";
 import { Eyebrow, Heading } from "@/components/ui/typography";
 
 const links = [contactLinks.github, contactLinks.linkedin];
-
-const localTime = () =>
-  new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Asia/Ho_Chi_Minh",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date());
-
-function LocalTime() {
-  const [time, setTime] = useState(localTime);
-  useEffect(() => {
-    const id = setInterval(() => setTime(localTime()), 10_000);
-    return () => clearInterval(id);
-  }, []);
-  // server and client clocks can straddle a minute
-  return <time suppressHydrationWarning>{time} GMT+7</time>;
-}
 
 function CopyEmail() {
   const [copied, setCopied] = useState(false);
@@ -77,9 +62,8 @@ export default function Contact() {
         gsap
           .timeline({
             scrollTrigger: {
-              trigger: self.elements[0],
-              start: "top 85%",
-              end: "bottom 40%",
+              ...enterTrigger(self.elements[0], 85),
+              end: storyTween() ? "left 30%" : "bottom 40%",
               scrub: 1,
             },
           })
@@ -98,7 +82,7 @@ export default function Contact() {
     <footer
       ref={ref}
       id="contact"
-      className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-ink py-24 text-center"
+      className="relative flex min-h-dvh shrink-0 flex-col items-center justify-center overflow-hidden border-paper/10 bg-ink py-24 text-center lg:h-dvh lg:w-screen lg:border-l"
       aria-label="Contact"
     >
       <div

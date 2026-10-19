@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger } from "../lib/gsap";
+import { enterTrigger } from "../lib/story";
 
 export function useScrollReveal<T extends HTMLElement>(
   options: {
@@ -30,8 +31,7 @@ export function useScrollReveal<T extends HTMLElement>(
         stagger: options.stagger ?? 0.12,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: el,
-          start: "top 80%",
+          ...enterTrigger(el),
           once: options.once,
           toggleActions: options.once
             ? "play none none none"

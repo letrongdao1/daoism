@@ -1,12 +1,12 @@
 import type { TechId } from "./techs";
 
 export const profile = {
-  name: "Dao Trong Le",
+  name: "Dao Le Trong",
   roles: ["Frontend / Full stack", "Software Engineer"],
   availability: "Open to work · Ho Chi Minh City / Remote",
   experience: "two years",
   description:
-    "Portfolio of Dao Trong Le, software engineer with full-stack experience in React, Next.js, Node.js.",
+    "Portfolio of Dao Le Trong, software engineer with full-stack experience in React, Next.js, Node.js.",
   cv: "/CV_DaoTrongLe.pdf",
   contacts: {
     email: "letrongdaocontact8@gmail.com",
@@ -22,14 +22,6 @@ export const contactLinks = {
   github: { label: "GitHub", href: profile.contacts.github },
   linkedin: { label: "LinkedIn", href: profile.contacts.linkedin },
 };
-
-export const heroStack: TechId[] = [
-  "typescript",
-  "react",
-  "nextjs",
-  "nodejs",
-  "nestjs",
-];
 
 export const skills: { label: string; techs: TechId[] }[] = [
   {

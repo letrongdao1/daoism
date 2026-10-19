@@ -1,50 +1,75 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { createPortal } from "react-dom";
-import { gsap, ScrollTrigger } from "../lib/gsap";
-import { Badge } from "@/components/ui/badge";
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowRightIcon,
+  LoaderCircle,
+  Menu,
+  Mouse,
+  Star,
+  Type,
+  type LucideIcon,
+} from "lucide-react";
+import { gsap } from "../lib/gsap";
+import { storyTween } from "../lib/story";
+import LocalTime from "./LocalTime";
 import { Button } from "@/components/ui/button";
-import { techs } from "@/data/techs";
-import { contactLinks, heroStack, profile } from "@/data/profile";
-import mailIcon from "../assets/icons/mail.png";
-import phoneIcon from "../assets/icons/phone.png";
-import githubIcon from "../assets/icons/github.png";
-import linkedinIcon from "../assets/icons/linkedin.png";
-import portrait from "../assets/images/portrait.png";
+import { profile } from "@/data/profile";
 
-const links = [
-  { ...contactLinks.email, icon: mailIcon },
-  { ...contactLinks.phone, icon: phoneIcon },
-  { ...contactLinks.github, icon: githubIcon },
-  { ...contactLinks.linkedin, icon: linkedinIcon },
+const pronouns = [
+  "a software engineer",
+  "a teamate",
+  "a colleague",
+  "a friend",
 ];
 
-const adjectives = [
-  "clean",
-  "reliable",
-  "fast",
-  "accessible",
-  "responsive",
-  "intuitive",
+// keyed by letter position in the name, spaces skipped
+// crops the icon's 24px box to its drawn bounds and scales the stroke with it,
+// so at cap height every glyph has the same stem weight as the letters
+const glyph = (Icon: LucideIcon, [x, y, w, h]: number[]) => {
+  const s = h * 0.32;
+  return {
+    Icon,
+    strokeWidth: s,
+    viewBox: `${x - s / 2} ${y - s / 2} ${w + s} ${h + s}`,
+  };
+};
+
+const glyphs: Record<number, ReturnType<typeof glyph>> = {
+  1: glyph(Star, [2.1, 2, 19.8, 19.1]),
+  2: glyph(Mouse, [5, 2, 14, 20]),
+  4: glyph(Menu, [4, 5, 16, 14]),
+  5: glyph(Type, [4, 4, 16, 16]),
+  7: glyph(LoaderCircle, [3, 3, 18, 18]),
+};
+
+// each letter flies in from off-screen, one direction per letter
+const entrances: gsap.TweenVars[] = [
+  { x: "-100vw" },
+  { y: "-100vh", rotation: -360 },
+  { x: "100vw", y: "-100vh", rotation: 45 },
+  { y: "100vh" },
+  { x: "-100vw", y: "100vh" },
+  { x: "100vw" },
+  { x: "-100vw", y: "-100vh", rotation: -45 },
+  { y: "100vh", rotation: 720 },
+  { x: "100vw", y: "100vh" },
+  { y: "-100vh" },
 ];
+
+const craft = ["Pure", "Motion with purpose", "Details, end to end"];
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const blobARef = useRef<HTMLDivElement | null>(null);
   const blobBRef = useRef<HTMLDivElement | null>(null);
-  const heroIconsRef = useRef<HTMLDivElement | null>(null);
-  const cornerIconsRef = useRef<HTMLDivElement | null>(null);
+  const nameWrapRef = useRef<HTMLDivElement | null>(null);
+  const nameRef = useRef<HTMLHeadingElement | null>(null);
   const [wordIndex, setWordIndex] = useState(0);
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
 
   useEffect(() => {
     const id = setInterval(
-      () => setWordIndex((i) => (i + 1) % adjectives.length),
+      () => setWordIndex((i) => (i + 1) % pronouns.length),
       2200,
     );
     return () => clearInterval(id);
@@ -52,97 +77,91 @@ export default function Hero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from("[data-hero-fade]", {
-        opacity: 0,
-        y: 16,
-        duration: 0.9,
-        ease: "power2.out",
-        stagger: 0.08,
-        delay: 0.1,
-      });
-
-      const reduceMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-
-      ScrollTrigger.create({
-        trigger: heroIconsRef.current,
-        start: "top 10%",
-        end: "max",
-        onToggle: ({ isActive }) => {
-          const fade = {
-            duration: reduceMotion ? 0 : 0.4,
-            ease: "power2.out",
-            overwrite: true,
-          };
-          gsap.to(heroIconsRef.current, {
-            ...fade,
-            autoAlpha: isActive ? 0 : 1,
-          });
-          gsap.to(cornerIconsRef.current, {
-            ...fade,
-            autoAlpha: isActive ? 1 : 0,
-            y: isActive ? 0 : 24,
-          });
-        },
-      });
-
-      if (!reduceMotion) {
-        gsap.to(blobARef.current, {
-          x: 60,
-          y: 30,
-          duration: 16,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-        });
-        gsap.to(blobBRef.current, {
-          x: -50,
-          y: -40,
-          duration: 20,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
+      document.documentElement.classList.add("intro-ready");
+      const intro = gsap.timeline({ delay: 0.3 });
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        gsap.utils.toArray<HTMLElement>("[data-letter]").forEach((el, i) => {
+          intro.from(
+            el,
+            { duration: 1.4, ease: "expo.out", ...entrances[i] },
+            i * 0.09,
+          );
         });
       }
+      intro.from(
+        document.querySelectorAll("[data-intro]"),
+        { opacity: 0, duration: 1.2, ease: "power1.out" },
+        ">-0.2",
+      );
+      intro.from(
+        "[data-hero-fade]",
+        { opacity: 0, y: 16, duration: 0.9, ease: "power2.out", stagger: 0.08 },
+        "<0.2",
+      );
+
+      const story = storyTween();
+      if (story) {
+        const wrap = nameWrapRef.current!;
+        const about = document.getElementById("about")!;
+        const portrait = about.querySelector<HTMLElement>("[data-portrait]")!;
+        // offsets ignore transforms, so these stay valid while the track is mid-scroll
+        gsap.to(nameRef.current, {
+          x: () =>
+            about.offsetLeft +
+            portrait.offsetLeft +
+            (portrait.offsetWidth - wrap.offsetWidth) / 2 -
+            40 -
+            sectionRef.current!.offsetLeft -
+            wrap.offsetLeft,
+          y: () =>
+            portrait.offsetTop +
+            portrait.offsetHeight * 0.05 -
+            100 -
+            wrap.offsetTop,
+          color: getComputedStyle(document.documentElement).getPropertyValue(
+            "--color-ink",
+          ),
+          ease: "none",
+          scrollTrigger: {
+            trigger: about,
+            containerAnimation: story,
+            start: "left right",
+            end: "left left",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      gsap.to(blobARef.current, {
+        x: 60,
+        y: 30,
+        duration: 16,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+      });
+      gsap.to(blobBRef.current, {
+        x: -50,
+        y: -40,
+        duration: 20,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+      });
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  const iconLinks = links.map((link) => (
-    <Button
-      key={link.label}
-      asChild
-      variant="ghost"
-      className="size-11 text-paper/60 hover:bg-transparent hover:text-accent"
-    >
-      <a
-        href={link.href}
-        target={link.href.startsWith("http") ? "_blank" : undefined}
-        rel="noreferrer"
-        aria-label={link.label}
-        title={link.label}
-      >
-        <span
-          className="h-7 w-7 bg-current"
-          style={{
-            mask: `url(${link.icon.src}) center / contain no-repeat`,
-            WebkitMask: `url(${link.icon.src}) center / contain no-repeat`,
-          }}
-          aria-hidden="true"
-        />
-      </a>
-    </Button>
-  ));
-
   return (
     <section
       ref={sectionRef}
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-ink py-28"
+      className="relative flex min-h-dvh shrink-0 flex-col justify-between gap-12 bg-ink px-5 pt-28 pb-10 lg:h-dvh lg:w-screen lg:p-0"
       aria-label="Introduction"
     >
-      <div className="layer" aria-hidden="true">
+      <div data-intro className="layer overflow-hidden" aria-hidden="true">
         <div
           ref={blobARef}
           className="absolute top-[-10%] left-[-10%] h-[55vmax] w-[55vmax] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.14)_0%,transparent_70%)] blur-3xl"
@@ -154,6 +173,7 @@ export default function Hero() {
       </div>
 
       <div
+        data-intro
         className="layer opacity-[0.04]"
         aria-hidden="true"
         style={{
@@ -163,128 +183,126 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-4 px-6 md:grid-cols-[1.25fr_1fr] md:gap-12 md:px-10">
-        <div className="flex flex-col items-center text-center md:order-last">
-          <div data-hero-fade className="relative w-64 sm:w-80 lg:w-96">
-            <div
-              className="absolute top-[8%] left-1/2 aspect-square w-[85%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.28)_0%,rgba(201,162,75,0.08)_45%,transparent_70%)]"
-              aria-hidden="true"
-            />
-            <img
-              src={portrait.src}
-              alt={`Portrait of ${profile.name}`}
-              className="relative w-full drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] select-none"
-              style={{
-                maskImage:
-                  "linear-gradient(to bottom, black 60%, transparent 95%)",
-                WebkitMaskImage:
-                  "linear-gradient(to bottom, black 60%, transparent 95%)",
-              }}
-              draggable={false}
-            />
-          </div>
-          <h1
-            data-hero-fade
-            className="relative -mt-20 bg-linear-to-br from-paper via-paper to-accent bg-clip-text font-display text-4xl font-bold tracking-tight text-transparent uppercase drop-shadow-[0_0_30px_rgba(201,162,75,0.25)] sm:text-5xl lg:text-6xl"
-          >
-            {profile.name}
-          </h1>
-          <span
-            data-hero-fade
-            className="mt-3 text-sm font-medium tracking-[0.3em] text-accent uppercase sm:text-base"
-          >
-            {profile.roles.map((role) => (
-              <p key={role}>{role}</p>
-            ))}
-          </span>
-        </div>
-
-        <div className="flex flex-col items-start text-left">
-          <Badge
-            data-hero-fade
-            variant="outline"
-            className="mb-8 h-auto gap-2 self-center border-emerald-400/30 bg-emerald-400/10 px-4 py-1.5 text-xs font-normal whitespace-normal text-emerald-300 transition-none sm:text-sm md:self-baseline"
-          >
-            <span
-              className="h-2 w-2 animate-pulse rounded-full bg-emerald-400"
-              aria-hidden="true"
-            />
-            {profile.availability}
-          </Badge>
-
-          <p
-            data-hero-fade
-            className="font-display text-3xl leading-tight font-medium text-paper lg:text-4xl"
-          >
-            I build <span className="sr-only">clean, reliable</span>
-            <span className="inline-grid" aria-hidden="true">
-              {adjectives.map((word, i) => (
-                <span
-                  key={`${word}-${i === wordIndex}`}
-                  className={`col-start-1 row-start-1 ${
-                    i === wordIndex
-                      ? "word-rise font-semibold text-accent"
-                      : "invisible"
-                  }`}
-                >
-                  {word}
-                </span>
-              ))}
-            </span>
-            <br />
-            web interfaces.
-          </p>
-
-          <p
-            data-hero-fade
-            className="mt-6 max-w-xl text-base text-paper/70 sm:text-lg"
-          >
-            Products that real people use every day. I care about the details
-            that make them easy to use, and when a feature needs it, I work on
-            the backend too.
-          </p>
-
-          <p data-hero-fade className="mt-6 text-sm text-paper/50">
-            {heroStack.map((id) => techs[id].name).join(" · ")}
-          </p>
-
-          <div data-hero-fade className="mt-10 flex flex-wrap gap-3">
-            <Button
-              asChild
-              className="h-auto rounded-full px-6 py-3 font-semibold hover:bg-paper"
-            >
-              <a href={profile.cv} download>
-                Download CV
-              </a>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="h-auto rounded-full border-paper/20 bg-transparent px-6 py-3 text-paper hover:border-accent hover:bg-transparent hover:text-accent"
-            >
-              <a href="#work">View work →</a>
-            </Button>
-          </div>
-
-          <div data-hero-fade className="mt-8 -ml-2.5">
-            <div ref={heroIconsRef} className="flex items-center gap-5">
-              {iconLinks}
-            </div>
-          </div>
-        </div>
+      <div
+        ref={nameWrapRef}
+        className="relative lg:absolute lg:top-(--vg) lg:right-16 lg:z-1"
+      >
+        <h1
+          ref={nameRef}
+          className="font-grotesk text-[17vw] leading-[0.85] font-medium tracking-tight text-paper uppercase lg:text-[min(18vh,11vw)]"
+        >
+          <span className="sr-only">{profile.name}</span>
+          {profile.name.split(" ").map((word, w, words) => {
+            const offset = words.slice(0, w).join("").length;
+            return (
+              <span key={word} className="block" aria-hidden="true">
+                {[...word].map((letter, l) => {
+                  const g = glyphs[offset + l];
+                  return (
+                    <span
+                      key={l}
+                      data-letter
+                      className={`inline-block ${g ? "" : "font-lucky"}`}
+                    >
+                      {g ? (
+                        <g.Icon
+                          strokeWidth={g.strokeWidth}
+                          viewBox={g.viewBox}
+                          fill={g.Icon === Star ? "currentColor" : "none"}
+                          className="mx-[0.05em] inline-block h-[0.7em] w-auto align-baseline"
+                        />
+                      ) : (
+                        letter
+                      )}
+                    </span>
+                  );
+                })}
+              </span>
+            );
+          })}
+        </h1>
       </div>
 
-      {mounted &&
-        createPortal(
-          <div
-            ref={cornerIconsRef}
-            className="invisible fixed right-6 bottom-6 z-50 flex items-center gap-2 opacity-0 mix-blend-difference"
-            style={{ transform: "translateY(24px)" }}
-          >
-            {iconLinks}
-          </div>,
-          document.body,
-        )}
+      <div className="relative flex flex-col gap-5 lg:absolute lg:top-(--vg) lg:left-32 lg:w-[min(30vw,30rem)]">
+        <p
+          data-hero-fade
+          className="text-xs tracking-[0.3em] text-accent uppercase"
+        >
+          {profile.roles.join(" · ")}
+        </p>
+        <p
+          data-hero-fade
+          className="grid font-display text-[12vw] leading-[0.9] whitespace-nowrap text-accent lg:text-[min(17vh,6vw)]"
+        >
+          <span className="sr-only">{pronouns.join(", ")}</span>
+          {pronouns.map((word, i) => (
+            <span
+              key={`${word}-${i === wordIndex}`}
+              aria-hidden="true"
+              className={`col-start-1 row-start-1 ${
+                i === wordIndex ? "word-rise" : "invisible"
+              }`}
+            >
+              {word}
+            </span>
+          ))}
+        </p>
+        <ol
+          data-hero-fade
+          className="mt-6 flex flex-col gap-3 text-lg lg:text-2xl"
+        >
+          {craft.map((line, i) => (
+            <li
+              key={line}
+              className="flex items-baseline gap-4 border-t border-paper/10 pt-3 text-paper/80"
+            >
+              <span className="font-grotesk text-sm text-paper/40 tabular-nums">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              {line}
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div
+        data-hero-fade
+        className="relative flex flex-col gap-1.5 text-sm text-paper/70 lg:absolute lg:bottom-(--vg) lg:left-32"
+      >
+        <span className="inline-flex items-center gap-3">
+          <span className="size-2 animate-pulse rounded-full bg-emerald-400" />
+          {profile.availability}
+        </span>
+        <LocalTime />
+      </div>
+
+      <div
+        data-hero-fade
+        className="relative flex flex-wrap gap-3 lg:absolute lg:bottom-(--vg) lg:left-1/2 lg:-translate-x-1/2"
+      >
+        <Button
+          asChild
+          className="h-auto rounded-full px-6 py-3 font-semibold hover:bg-paper"
+        >
+          <a href={profile.cv} download>
+            Download CV
+          </a>
+        </Button>
+        <Button
+          asChild
+          variant="outline"
+          className="h-auto rounded-full border-paper/20 bg-transparent px-6 py-3 text-paper hover:border-accent hover:bg-transparent hover:text-accent"
+        >
+          <a href="#work">View work</a>
+        </Button>
+      </div>
+
+      <p
+        data-hero-fade
+        className="absolute right-16 bottom-(--vg) hidden items-center gap-3 font-display text-xs tracking-[0.4em] text-paper/60 uppercase lg:flex"
+      >
+        Scroll <ArrowRightIcon className="size-4" />
+      </p>
     </section>
   );
 }
