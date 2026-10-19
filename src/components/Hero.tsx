@@ -8,20 +8,6 @@ import LocalTime from "./LocalTime";
 import { Button } from "@/components/ui/button";
 import { profile } from "@/data/profile";
 
-// each letter flies in from off-screen, one direction per letter
-const entrances: gsap.TweenVars[] = [
-  { x: "-100vw" },
-  { y: "-100vh", rotation: -360 },
-  { x: "100vw", y: "-100vh", rotation: 45 },
-  { y: "100vh" },
-  { x: "-100vw", y: "100vh" },
-  { x: "100vw" },
-  { x: "-100vw", y: "-100vh", rotation: -45 },
-  { y: "100vh", rotation: 720 },
-  { x: "100vw", y: "100vh" },
-  { y: "-100vh" },
-];
-
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const blobARef = useRef<HTMLDivElement | null>(null);
@@ -35,20 +21,11 @@ export default function Hero() {
     if (!html.classList.contains("intro-ready")) {
       html.classList.add("intro-ready");
       const intro = gsap.timeline({ delay: 0.3 });
-      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        gsap.utils.toArray<HTMLElement>("[data-letter]").forEach((el, i) => {
-          intro.from(
-            el,
-            { duration: 1.4, ease: "expo.out", ...entrances[i] },
-            i * 0.09,
-          );
-        });
-      }
-      intro.from(
-        "[data-intro]",
-        { opacity: 0, duration: 1.2, ease: "power1.out" },
-        ">-0.2",
-      );
+      intro.from("[data-intro]", {
+        opacity: 0,
+        duration: 1.2,
+        ease: "power1.out",
+      });
       intro.from(
         "[data-hero-fade]",
         { opacity: 0, y: 16, duration: 0.9, ease: "power2.out", stagger: 0.08 },
@@ -152,11 +129,7 @@ export default function Hero() {
           <span className="sr-only">{profile.name}</span>
           {profile.name.split(" ").map((word) => (
             <span key={word} className="block" aria-hidden="true">
-              {[...word].map((letter, l) => (
-                <span key={l} data-letter className="inline-block">
-                  {letter}
-                </span>
-              ))}
+              {word}
             </span>
           ))}
         </h1>
