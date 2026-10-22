@@ -7,7 +7,7 @@ export const profile = {
   experience: "two years",
   description:
     "Portfolio of Dao Le Trong, software engineer with full-stack experience in React, Next.js, Node.js.",
-  cv: "/CV_DaoTrongLe.pdf",
+  cv: "/CV_DaoLeTrong.pdf",
   contacts: {
     email: "letrongdaocontact8@gmail.com",
     phone: "+84582124303",

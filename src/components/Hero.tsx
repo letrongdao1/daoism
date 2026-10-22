@@ -1,38 +1,26 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { ArrowRightIcon } from "lucide-react";
 import { gsap } from "../lib/gsap";
 import { storyTween } from "../lib/story";
 import LocalTime from "./LocalTime";
+import heroBg from "../assets/images/test-prl.jpg";
 import { Button } from "@/components/ui/button";
 import { profile } from "@/data/profile";
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const bgRef = useRef<HTMLDivElement | null>(null);
+  const bgTiltRef = useRef<HTMLDivElement | null>(null);
   const blobARef = useRef<HTMLDivElement | null>(null);
   const blobBRef = useRef<HTMLDivElement | null>(null);
   const nameWrapRef = useRef<HTMLDivElement | null>(null);
   const nameRef = useRef<HTMLHeadingElement | null>(null);
 
   useEffect(() => {
-    // once per page load: kept out of the context so a remount (strict mode, fast refresh) neither kills nor replays it
-    const html = document.documentElement;
-    if (!html.classList.contains("intro-ready")) {
-      html.classList.add("intro-ready");
-      const intro = gsap.timeline({ delay: 0.3 });
-      intro.from("[data-intro]", {
-        opacity: 0,
-        duration: 1.2,
-        ease: "power1.out",
-      });
-      intro.from(
-        "[data-hero-fade]",
-        { opacity: 0, y: 16, duration: 0.9, ease: "power2.out", stagger: 0.08 },
-        "<0.2",
-      );
-    }
-
+    const listeners = new AbortController();
     const ctx = gsap.context(() => {
       const story = storyTween();
       if (story) {
@@ -69,6 +57,56 @@ export default function Hero() {
       }
 
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      // background trails the page at ~35% speed; its 10% bleed covers the shift
+      const section = sectionRef.current!;
+      gsap.to(bgRef.current, {
+        ...(story
+          ? { x: () => section.offsetWidth * 0.65 }
+          : { y: () => section.offsetHeight * 0.4 }),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          ...(story
+            ? {
+                containerAnimation: story,
+                start: "left left",
+                end: "right left",
+              }
+            : { start: "top top", end: "bottom top" }),
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      if (window.matchMedia("(pointer: fine)").matches) {
+        const tilt = [
+          [bgTiltRef.current, -24],
+          [nameWrapRef.current, 10],
+        ] as const;
+        const movers = tilt.map(([el, range]) => ({
+          range,
+          x: gsap.quickTo(el, "x", { duration: 0.8, ease: "power3.out" }),
+          y: gsap.quickTo(el, "y", { duration: 0.8, ease: "power3.out" }),
+        }));
+        const move = (nx: number, ny: number) =>
+          movers.forEach((m) => {
+            m.x(nx * m.range);
+            m.y(ny * m.range);
+          });
+        const { signal } = listeners;
+        section.addEventListener(
+          "pointermove",
+          (e) =>
+            move(
+              e.clientX / window.innerWidth - 0.5,
+              e.clientY / window.innerHeight - 0.5,
+            ),
+          { signal },
+        );
+        section.addEventListener("pointerleave", () => move(0, 0), { signal });
+      }
+
       gsap.to(blobARef.current, {
         x: 60,
         y: 30,
@@ -87,7 +125,10 @@ export default function Hero() {
       });
     }, sectionRef);
 
-    return () => ctx.revert();
+    return () => {
+      listeners.abort();
+      ctx.revert();
+    };
   }, []);
 
   return (
@@ -97,6 +138,19 @@ export default function Hero() {
       aria-label="Introduction"
     >
       <div data-intro className="layer overflow-hidden" aria-hidden="true">
+        <div ref={bgRef} className="absolute inset-[-10%]">
+          <div ref={bgTiltRef} className="absolute inset-0">
+            <Image
+              src={heroBg}
+              alt=""
+              fill
+              preload
+              sizes="120vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
+        <div className="absolute inset-0 bg-ink/60" />
         <div
           ref={blobARef}
           className="absolute top-[-10%] left-[-10%] h-[55vmax] w-[55vmax] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.14)_0%,transparent_70%)] blur-3xl"
@@ -106,17 +160,6 @@ export default function Hero() {
           className="absolute right-[-10%] bottom-[-15%] h-[50vmax] w-[50vmax] rounded-full bg-[radial-gradient(circle,rgba(79,184,168,0.1)_0%,transparent_70%)] blur-3xl"
         />
       </div>
-
-      <div
-        data-intro
-        className="layer opacity-[0.04]"
-        aria-hidden="true"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, var(--color-paper) 1px, transparent 1px), linear-gradient(to bottom, var(--color-paper) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-        }}
-      />
 
       <div
         ref={nameWrapRef}

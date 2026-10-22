@@ -1,0 +1,11 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="260" height="180" viewBox="0 0 260 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Laptop">
+<path id="Vector" d="M218 4H42C35.3726 4 30 9.37258 30 16V128C30 134.627 35.3726 140 42 140H218C224.627 140 230 134.627 230 128V16C230 9.37258 224.627 4 218 4Z" fill="#221F1B"/>
+<path id="Vector_2" d="M214 14H46C42.6863 14 40 16.6863 40 20V124C40 127.314 42.6863 130 46 130H214C217.314 130 220 127.314 220 124V20C220 16.6863 217.314 14 214 14Z" fill="#DCEDFF"/>
+<path id="Vector_3" d="M106 54L88 72L106 90" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke="#221F1B"/>
+<path id="Vector_4" d="M154 54L172 72L154 90" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke="#221F1B"/>
+<path id="Vector_5" d="M138 48L122 96" stroke-width="6" stroke-linecap="round" stroke="#FF8F75"/>
+<path id="Vector_6" d="M4 146H256L244 170C242 174 238 176 234 176H26C22 176 18 174 16 170L4 146Z" fill="#B8A4FF"/>
+<path id="Vector_7" d="M152 146H108C105.791 146 104 147.791 104 150C104 152.209 105.791 154 108 154H152C154.209 154 156 152.209 156 150C156 147.791 154.209 146 152 146Z" fill="#8B74E8"/>
+</g>
+</svg>

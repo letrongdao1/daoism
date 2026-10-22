@@ -1,0 +1,434 @@
+/* Pin Book — colours mirror the Figma variables. Override them on .pb-root. */
+.pb-root {
+  --pb-bg: #faf6ef;
+  --pb-paper: #fffdf8;
+  --pb-gutter: rgba(214, 199, 172, 0.55);
+  --pb-edge: #e6dccb;
+  --pb-cover: #f07a5f;
+  --pb-ink: #221f1b;
+  --pb-ink-soft: #6e665b;
+  --pb-ink-faint: #b4aa9b;
+  --pb-stick: #6e665b;
+  position: relative;
+  background: var(--pb-bg);
+}
+
+/* Invisible markers, one per spread, so scrolling can settle on a page. */
+.pb-snap {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 100vh;
+  scroll-snap-align: start;
+  pointer-events: none;
+}
+
+.pb-sticky {
+  position: sticky;
+  top: max(0px, (100svh - 1800px) / 2);
+  height: min(100svh, 1800px);
+  max-width: 3200px;
+  margin-inline: auto;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+/* ---------- 3D scene -------------------------------------------------- */
+.pb-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  perspective: 1400px;
+  perspective-origin: 50% 30%;
+  pointer-events: none;
+}
+
+.pb-book {
+  /* page width and depth; everything else is relative to these */
+  --pw: clamp(160px, 40cqw, 600px);
+  --pd: calc(var(--pw) * 0.54);
+  position: absolute;
+  left: 50%;
+  bottom: 9%;
+  width: calc(var(--pw) * 2);
+  height: var(--pd);
+  margin-left: calc(var(--pw) * -1);
+  transform-origin: 50% 100%;
+  transform-style: preserve-3d;
+}
+
+/* Everything that holds 3D children must keep preserve-3d. Never put
+   opacity < 1, filter or overflow:hidden on these, or the 3D flattens. */
+.pb-page,
+.pb-leaf,
+.pb-face,
+.pb-anchor,
+.pb-popup,
+.pb-sway {
+  transform-style: preserve-3d;
+}
+
+/* the cover and page block are split per half so each folds with its page */
+.pb-cover {
+  position: absolute;
+  background: var(--pb-cover);
+  transform: translateZ(-14px);
+}
+.pb-page--left .pb-cover {
+  inset: -10px 0 -18px -16px;
+  border-radius: 10px 0 0 10px;
+}
+.pb-page--right .pb-cover {
+  inset: -10px -16px -18px 0;
+  border-radius: 0 10px 10px 0;
+}
+
+/* the bound spine under the gutter, with its rounded end showing at the near edge */
+.pb-spine {
+  position: absolute;
+  left: 50%;
+  top: -10px;
+  bottom: -18px;
+  width: 44px;
+  margin-left: -22px;
+  border-radius: 6px;
+  background: linear-gradient(to right, var(--pb-cover), color-mix(in srgb, var(--pb-cover), #000 28%) 50%, var(--pb-cover));
+  transform: translateZ(-15px);
+}
+.pb-spine::after {
+  content: "";
+  position: absolute;
+  left: 9px;
+  right: 9px;
+  top: calc(100% - 18px);
+  height: 32px;
+  border-radius: 0 0 50% 50%;
+  background: color-mix(in srgb, var(--pb-cover), #000 35%);
+  transform-origin: 50% 0;
+  transform: rotateX(-90deg);
+}
+
+.pb-shadow {
+  position: absolute;
+  left: 3%;
+  right: 3%;
+  bottom: -40px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(34, 31, 27, 0.16);
+  filter: blur(20px);
+  transform: translateZ(-16px);
+}
+
+/* the block of pages seen along the near edge */
+.pb-edge {
+  position: absolute;
+  top: 100%;
+  width: calc(var(--pw) - 10px);
+  height: 12px;
+  transform-origin: 50% 0;
+  transform: rotateX(-90deg);
+  background: repeating-linear-gradient(to bottom, #f6f0e5 0 2px, #e3d8c4 2px 3px);
+}
+.pb-page--left .pb-edge {
+  left: 2px;
+  border-radius: 0 0 6px 4px;
+}
+.pb-page--right .pb-edge {
+  left: 8px;
+  border-radius: 0 0 4px 6px;
+}
+
+.pb-page {
+  position: absolute;
+  top: 0;
+  width: var(--pw);
+  height: 100%;
+}
+.pb-page--left {
+  left: 0;
+  transform-origin: 100% 50%;
+  transform: rotateY(var(--pb-fold, 0deg));
+}
+.pb-page--right {
+  left: 50%;
+  transform-origin: 0 50%;
+  transform: rotateY(calc(-1 * var(--pb-fold, 0deg)));
+}
+
+.pb-leaf {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--pw);
+  height: 100%;
+  transform-origin: 0 50%; /* the spine */
+}
+
+.pb-face {
+  position: absolute;
+  inset: 0;
+}
+.pb-face--back {
+  transform: rotateY(180deg);
+}
+/* The paper is painted on a flat ::before, not on the 3D face itself:
+   Chrome can skip painting part of a large preserve-3d element's own
+   background when it is tilted steeply. */
+.pb-face::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--pb-paper);
+  border: 1px solid var(--pb-edge);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.pb-face--left::before {
+  border-radius: 6px 0 0 6px;
+  background-image: linear-gradient(to left, rgba(110, 80, 45, 0.42), var(--pb-gutter) 3%, transparent 28%);
+}
+.pb-face--right::before {
+  border-radius: 0 6px 6px 0;
+  background-image: linear-gradient(to right, rgba(110, 80, 45, 0.42), var(--pb-gutter) 3%, transparent 28%);
+}
+
+/* Everything drawn on a face hides when that face points away. */
+.pb-shade,
+.pb-print,
+.pb-folio {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Pop-ups on pages you can't see are hidden, so nothing pokes through. */
+.pb-face--quiet .pb-anchor {
+  visibility: hidden;
+}
+
+.pb-shade {
+  position: absolute;
+  inset: 0;
+  background: var(--pb-ink);
+  pointer-events: none;
+  transform: translateZ(0.2px);
+}
+.pb-face--left .pb-shade {
+  border-radius: 6px 0 0 6px;
+}
+.pb-face--right .pb-shade {
+  border-radius: 0 6px 6px 0;
+}
+
+.pb-print {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateZ(0.1px);
+}
+
+.pb-folio {
+  position: absolute;
+  bottom: 9%;
+  font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pb-ink-faint);
+  transform: translateZ(0.1px);
+}
+.pb-folio--left {
+  left: 8%;
+}
+.pb-folio--right {
+  right: 8%;
+}
+
+/* ---------- pop-ups on sticks ----------------------------------------- */
+.pb-anchor {
+  position: absolute;
+  width: 0;
+  height: 0;
+  /* Folded pop-ups lie just above their own paper, below the next leaf.
+     The scale shrinks every pop-up (and its stick) around its base point. */
+  transform: translateZ(0.6px) scale3d(var(--pb-pop-scale, 1), var(--pb-pop-scale, 1), var(--pb-pop-scale, 1));
+}
+
+.pb-popup {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: max-content; /* the anchor is 0px wide; don't let content wrap to it */
+  transform-origin: 50% 100%;
+}
+.pb-popup--start {
+  transform-origin: 0 100%;
+}
+
+.pb-sway {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: 50% 100%;
+  animation: pb-sway 5s ease-in-out infinite alternate;
+}
+.pb-popup--start .pb-sway {
+  align-items: flex-start;
+  transform-origin: 0 100%;
+}
+
+@keyframes pb-sway {
+  from {
+    transform: rotate(-1.2deg);
+  }
+  to {
+    transform: rotate(1.2deg);
+  }
+}
+
+.pb-element {
+  position: relative;
+  z-index: 1;
+  margin-bottom: -10px; /* the stick tucks behind the element */
+  pointer-events: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.pb-sticks {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  /* each stick becomes its own small 3D plane: Chrome can skip painting
+     part of a wide flat layer that is tilted in 3D */
+  transform-style: preserve-3d;
+}
+.pb-sticks[data-count="2"] {
+  align-self: stretch;
+  justify-content: space-between;
+  padding: 0 16%;
+}
+.pb-popup--start .pb-sticks {
+  justify-content: flex-start;
+}
+
+.pb-stick {
+  position: relative;
+  width: 2px;
+  height: 100%;
+  border-radius: 1px;
+  background: var(--pb-stick);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+/* the slot where the stick goes into the paper */
+.pb-stick::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 12px;
+  height: 5px;
+  margin-left: -6px;
+  border-radius: 50%;
+  background: rgba(34, 31, 27, 0.18);
+}
+
+/* ---------- free text + nav ------------------------------------------- */
+.pb-copy {
+  position: absolute;
+  z-index: 2;
+  left: max(24px, 8cqw);
+  top: 15%;
+  width: min(560px, 42cqw);
+}
+
+.pb-nav {
+  position: absolute;
+  z-index: 3;
+  top: 37px;
+  left: 50%;
+  display: flex;
+  gap: 28px;
+  transform: translateX(-50%);
+}
+.pb-nav__item {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--pb-ink-soft);
+  cursor: pointer;
+}
+.pb-nav__item[aria-current="page"] {
+  color: var(--pb-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.pb-nav__item:hover {
+  color: var(--pb-ink);
+}
+
+/* desktop: book's right cover edge mirrors the copy's left margin */
+@media (min-width: 1024px) {
+  .pb-book {
+    left: auto;
+    right: calc(max(24px, 8cqw) + 16px);
+    margin-left: 0;
+  }
+}
+
+/* ---------- smaller screens ------------------------------------------- */
+@media (max-width: 1200px) {
+  .pb-root {
+    --pb-pop-scale: 0.86;
+  }
+}
+@media (max-width: 900px) {
+  .pb-root {
+    --pb-pop-scale: 0.7;
+  }
+}
+@media (width < 640px) {
+  .pb-root {
+    --pb-pop-scale: 0.5;
+  }
+  .pb-book {
+    --pw: 46cqw;
+    bottom: 12%;
+  }
+  .pb-copy {
+    left: 20px;
+    right: 20px;
+    top: 10%;
+    width: auto;
+  }
+  .pb-nav {
+    top: 18px;
+    gap: 14px;
+  }
+  .pb-nav__item {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-sway {
+    animation: none;
+  }
+}
+
+@media (width < 640px) and (height < 720px) {
+  .pb-root {
+    --pb-pop-scale: 0.36;
+  }
+  .pb-book {
+    bottom: 5%;
+  }
+  .pb-copy {
+    top: 8%;
+  }
+}

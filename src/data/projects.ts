@@ -59,7 +59,7 @@ export const projects: Project[] = [
     title: "HNB Hub",
     year: "Oct 2025 - Jul 2026",
     description:
-      "Solo full-stack community app with 10+ active members. It has events with sign-up and fair cost splitting (only people who attend pay), a newsfeed, group chat, a photo and video library, seasonal minigames and daily check-in streaks.",
+      "Solo full-stack community app with 10+ active members. It has events with sign-up and fair cost splitting, a newsfeed, group chat, a photo and video library, seasonal minigames and daily check-in streaks.",
     stacks: ["nextjs", "supabase", "zustand", "tailwind", "awsS3", "vercel"],
     tags: ["Feature-rich", "Gamified"],
     bg: hnbHubBg,

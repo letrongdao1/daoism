@@ -1,0 +1,7 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="160" height="112" viewBox="0 0 160 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Envelope">
+<path id="Vector" d="M146 2H14C7.37258 2 2 7.37258 2 14V98C2 104.627 7.37258 110 14 110H146C152.627 110 158 104.627 158 98V14C158 7.37258 152.627 2 146 2Z" fill="#74B9FF"/>
+<path id="Vector_2" d="M8 12L80 64L152 12" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke="white"/>
+<path id="Vector_3" opacity="0.6" d="M8 102L58 52M152 102L102 52" stroke-width="3" stroke-linecap="round" stroke="white"/>
+</g>
+</svg>

@@ -1,0 +1,15 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="230" height="200" viewBox="0 0 230 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Treasure Chest">
+<path id="Vector" d="M40 22L44 32L54 36L44 40L40 50L36 40L26 36L36 32L40 22Z" fill="#FFCB52"/>
+<path id="Vector_2" d="M190 10L193 18L201 21L193 24L190 32L187 24L179 21L187 18L190 10Z" fill="#B8A4FF"/>
+<path id="Vector_3" d="M118 0L120 6L126 8L120 10L118 16L116 10L110 8L116 6L118 0Z" fill="#FFA3C8"/>
+<path id="Vector_4" d="M15 106C15 66 50 46 115 46C180 46 215 66 215 106H15Z" fill="#FF8F75"/>
+<path id="Vector_5" d="M205 104H25C19.4772 104 15 108.477 15 114V184C15 189.523 19.4772 194 25 194H205C210.523 194 215 189.523 215 184V114C215 108.477 210.523 104 205 104Z" fill="#FFCB52"/>
+<path id="Vector_6" d="M68 50H48V194H68V50Z" fill="#F07A5F"/>
+<path id="Vector_7" d="M182 50H162V194H182V50Z" fill="#F07A5F"/>
+<path id="Vector_8" d="M215 100H15V110H215V100Z" fill="#F07A5F"/>
+<path id="Vector_9" d="M124 96H106C102.134 96 99 99.134 99 103V127C99 130.866 102.134 134 106 134H124C127.866 134 131 130.866 131 127V103C131 99.134 127.866 96 124 96Z" fill="#221F1B"/>
+<path id="Vector_10" d="M115 115.5C117.485 115.5 119.5 113.485 119.5 111C119.5 108.515 117.485 106.5 115 106.5C112.515 106.5 110.5 108.515 110.5 111C110.5 113.485 112.515 115.5 115 115.5Z" fill="#FFCB52"/>
+<path id="Vector_11" d="M115 114V122" stroke-width="3.5" stroke-linecap="round" stroke="#FFCB52"/>
+</g>
+</svg>

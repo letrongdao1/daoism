@@ -23,7 +23,7 @@ export default function RootLayout({
           crossOrigin=""
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Inter:wght@400;500;600&family=Montserrat:wght@400..800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&family=DM+Sans:opsz,wght@9..40,400..600&family=JetBrains+Mono:wght@500&family=Caveat:wght@700&family=Montserrat:wght@400..800&display=swap"
           rel="stylesheet"
         />
       </head>

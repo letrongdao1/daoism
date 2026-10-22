@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="90" height="120" viewBox="0 0 90 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Plant">
+<path id="Vector" d="M45 70C45 40 30 26 10 22C14 46 26 62 45 70Z" fill="#74D8B4"/>
+<path id="Vector_2" d="M45 70C45 36 60 18 82 12C80 40 66 60 45 70Z" fill="#74D8B4"/>
+<path id="Vector_3" d="M45 72V42" stroke-width="3" stroke-linecap="round" stroke="#3FAE86"/>
+<path id="Vector_4" d="M18 72H72L66 112C65 116 62 118 58 118H32C28 118 25 116 24 112L18 72Z" fill="#FFCB52"/>
+<path id="Vector_5" d="M72 66H18C15.7909 66 14 67.7909 14 70V74C14 76.2091 15.7909 78 18 78H72C74.2091 78 76 76.2091 76 74V70C76 67.7909 74.2091 66 72 66Z" fill="#F4B935"/>
+</g>
+</svg>

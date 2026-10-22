@@ -55,6 +55,12 @@
       "skillPath": "skills/improve-ui/SKILL.md",
       "computedHash": "31c09b79a1c196adccb1637a225cef54f537da87430fda0ba309ef83e78f10e5"
     },
+    "responsive-craft": {
+      "source": "kylezantos/responsive-craft",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "10e1d8b1eae6412a0d59879bd0f6d10ab3792b424c8738c833eac6d655d4f2b5"
+    },
     "sigma": {
       "source": "sanyuan0704/code-review-expert",
       "sourceType": "github",

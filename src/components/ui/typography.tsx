@@ -16,10 +16,7 @@ export function Eyebrow({ className, ...props }: ComponentProps<"p">) {
 export function Heading({ className, ...props }: ComponentProps<"h2">) {
   return (
     <h2
-      className={cn(
-        "font-title text-4xl leading-tight md:text-5xl",
-        className,
-      )}
+      className={cn("font-title text-4xl leading-tight md:text-5xl", className)}
       {...props}
     />
   );
