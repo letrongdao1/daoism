@@ -445,7 +445,14 @@ function Face({
 
   return (
     <div
-      className={`pb-face pb-face--${side}${back ? "pb-face--back" : ""}${shown ? "" : "pb-face--quiet"}`}
+      className={[
+        "pb-face",
+        `pb-face--${side}`,
+        back && "pb-face--back",
+        !shown && "pb-face--quiet",
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       {print && <div className="pb-print">{print}</div>}
       {folio && <span className={`pb-folio pb-folio--${side}`}>{folio}</span>}
