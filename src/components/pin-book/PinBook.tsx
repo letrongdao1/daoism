@@ -99,7 +99,9 @@ export function PinBook({
   const turning = settled !== state.index;
   const steps = Math.abs(state.index - state.from);
   useEffect(() => {
-    const ms = reduce ? 0 : (flipDuration + Math.max(0, steps - 1) * STAGGER) * 1000 - 150;
+    const ms = reduce
+      ? 0
+      : (flipDuration + Math.max(0, steps - 1) * STAGGER) * 1000 - 150;
     const t = window.setTimeout(() => setSettled(state.index), ms);
     return () => window.clearTimeout(t);
   }, [state, steps, flipDuration, reduce]);
@@ -121,7 +123,10 @@ export function PinBook({
     (i: number) => {
       const el = rootRef.current;
       if (!el) return;
-      const top = el.getBoundingClientRect().top + window.scrollY + i * window.innerHeight;
+      const top =
+        el.getBoundingClientRect().top +
+        window.scrollY +
+        i * window.innerHeight;
       window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
     },
     [reduce],
@@ -174,7 +179,13 @@ export function PinBook({
     >
       {snap &&
         spreads.map((s, i) => (
-          <div key={s.id} id={s.id} className="pb-snap" style={{ top: `${i * 100}vh` }} aria-hidden />
+          <div
+            key={s.id}
+            id={s.id}
+            className="pb-snap"
+            style={{ top: `${i * 100}vh` }}
+            aria-hidden
+          />
         ))}
 
       <div
@@ -202,7 +213,12 @@ export function PinBook({
         )}
 
         <div className="pb-stage">
-          <motion.div className="pb-book" style={{ rotateX, rotateZ, "--pb-fold": `${fold}deg` } as MotionStyle}>
+          <motion.div
+            className="pb-book"
+            style={
+              { rotateX, rotateZ, "--pb-fold": `${fold}deg` } as MotionStyle
+            }
+          >
             <div className="pb-shadow" />
             <div className="pb-spine" />
 
@@ -271,7 +287,10 @@ export function PinBook({
               animate={{
                 opacity: 1,
                 y: 0,
-                transition: { duration: 0.45, delay: reduce ? 0 : flipDuration * 0.45 },
+                transition: {
+                  duration: 0.45,
+                  delay: reduce ? 0 : flipDuration * 0.45,
+                },
               }}
               exit={{ opacity: 0, y: -24, transition: { duration: 0.2 } }}
             >
@@ -317,7 +336,11 @@ function Leaf(p: LeafProps) {
       rot.set(rest);
       return;
     }
-    const controls = animate(rot, rest, { duration: p.duration, ease: EASE, delay: p.delay });
+    const controls = animate(rot, rest, {
+      duration: p.duration,
+      ease: EASE,
+      delay: p.delay,
+    });
     return () => controls.stop();
     // Only re-run when the leaf changes side.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -326,7 +349,11 @@ function Leaf(p: LeafProps) {
   // Stacking: unturned leaves pile up on the right (lowest k on top), turned
   // ones on the left (highest k on top); a leaf in the air rides above both.
   // Leaves are 2px apart so folded pop-ups (0.6px above their paper) never show through.
-  const z = useTransform(rot, [p.fold - 180, -90, -p.fold], [(p.k + 1) * 2, (p.n + 2) * 2, (p.n - p.k) * 2]);
+  const z = useTransform(
+    rot,
+    [p.fold - 180, -90, -p.fold],
+    [(p.k + 1) * 2, (p.n + 2) * 2, (p.n - p.k) * 2],
+  );
   // A soft shade sweeps across the sheet as it lifts and lands.
   const shade = useTransform(rot, [p.fold - 180, -90, -p.fold], [0, 0.2, 0]);
 
@@ -388,12 +415,25 @@ function usePhone() {
   );
 }
 
-function Face({ side, back, popups: all, standing, shown, tilt, reduce, folio, print, shade }: FaceProps) {
+function Face({
+  side,
+  back,
+  popups: all,
+  standing,
+  shown,
+  tilt,
+  reduce,
+  folio,
+  print,
+  shade,
+}: FaceProps) {
   const phone = usePhone();
   const popups = useMemo(
     () =>
       phone
-        ? all.filter((s) => !s.mobile?.hidden).map((s) => ({ ...s, ...s.mobile }))
+        ? all
+            .filter((s) => !s.mobile?.hidden)
+            .map((s) => ({ ...s, ...s.mobile }))
         : all,
     [all, phone],
   );
@@ -404,7 +444,9 @@ function Face({ side, back, popups: all, standing, shown, tilt, reduce, folio, p
   }, [popups]);
 
   return (
-    <div className={`pb-face pb-face--${side}${back ? " pb-face--back" : ""}${shown ? "" : " pb-face--quiet"}`}>
+    <div
+      className={`pb-face pb-face--${side}${back ? "pb-face--back" : ""}${shown ? "" : "pb-face--quiet"}`}
+    >
       {print && <div className="pb-print">{print}</div>}
       {folio && <span className={`pb-folio pb-folio--${side}`}>{folio}</span>}
       {shade && <motion.div className="pb-shade" style={{ opacity: shade }} />}
@@ -443,8 +485,17 @@ function Popup({ spec, standing, order, count, tilt, reduce }: PopupProps) {
   const transition = reduce
     ? { duration: 0 }
     : isUp
-      ? { type: "spring" as const, stiffness: 260, damping: 18, delay: 0.05 + order * 0.06 }
-      : { duration: 0.26, ease: "easeIn" as const, delay: (count - 1 - order) * 0.03 };
+      ? {
+          type: "spring" as const,
+          stiffness: 260,
+          damping: 18,
+          delay: 0.05 + order * 0.06,
+        }
+      : {
+          duration: 0.26,
+          ease: "easeIn" as const,
+          delay: (count - 1 - order) * 0.03,
+        };
 
   const sway = {
     animationDelay: `${-(hash(spec.id) % 50) / 10}s`,
@@ -452,7 +503,10 @@ function Popup({ spec, standing, order, count, tilt, reduce }: PopupProps) {
   } as CSSProperties;
 
   return (
-    <div className="pb-anchor" style={{ left: `${spec.x}%`, top: `${spec.y}%` }}>
+    <div
+      className="pb-anchor"
+      style={{ left: `${spec.x}%`, top: `${spec.y}%` }}
+    >
       <motion.div
         className={`pb-popup pb-popup--${spec.align ?? "center"}`}
         style={{ x: spec.align === "start" ? -1 : "-50%" }}
@@ -484,7 +538,9 @@ function clamp(v: number, min: number, max: number) {
   return Math.min(max, Math.max(min, v));
 }
 function folio(s: Spread, i: number, side: "left" | "right") {
-  return s.folios?.[side === "left" ? 0 : 1] ?? (side === "left" ? s.label : pad(i));
+  return (
+    s.folios?.[side === "left" ? 0 : 1] ?? (side === "left" ? s.label : pad(i))
+  );
 }
 function pad(i: number) {
   return String(i).padStart(2, "0");

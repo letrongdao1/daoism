@@ -92,7 +92,12 @@
   width: 44px;
   margin-left: -22px;
   border-radius: 6px;
-  background: linear-gradient(to right, var(--pb-cover), color-mix(in srgb, var(--pb-cover), #000 28%) 50%, var(--pb-cover));
+  background: linear-gradient(
+    to right,
+    var(--pb-cover),
+    color-mix(in srgb, var(--pb-cover), #000 28%) 50%,
+    var(--pb-cover)
+  );
   transform: translateZ(-15px);
 }
 .pb-spine::after {
@@ -128,7 +133,11 @@
   height: 12px;
   transform-origin: 50% 0;
   transform: rotateX(-90deg);
-  background: repeating-linear-gradient(to bottom, #f6f0e5 0 2px, #e3d8c4 2px 3px);
+  background: repeating-linear-gradient(
+    to bottom,
+    #f6f0e5 0 2px,
+    #e3d8c4 2px 3px
+  );
 }
 .pb-page--left .pb-edge {
   left: 2px;
@@ -186,11 +195,21 @@
 }
 .pb-face--left::before {
   border-radius: 6px 0 0 6px;
-  background-image: linear-gradient(to left, rgba(110, 80, 45, 0.42), var(--pb-gutter) 3%, transparent 28%);
+  background-image: linear-gradient(
+    to left,
+    rgba(110, 80, 45, 0.42),
+    var(--pb-gutter) 3%,
+    transparent 28%
+  );
 }
 .pb-face--right::before {
   border-radius: 0 6px 6px 0;
-  background-image: linear-gradient(to right, rgba(110, 80, 45, 0.42), var(--pb-gutter) 3%, transparent 28%);
+  background-image: linear-gradient(
+    to right,
+    rgba(110, 80, 45, 0.42),
+    var(--pb-gutter) 3%,
+    transparent 28%
+  );
 }
 
 /* Everything drawn on a face hides when that face points away. */
@@ -231,7 +250,10 @@
 .pb-folio {
   position: absolute;
   bottom: 9%;
-  font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace;
+  font:
+    500 12px/1 "JetBrains Mono",
+    ui-monospace,
+    monospace;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--pb-ink-faint);
@@ -251,7 +273,12 @@
   height: 0;
   /* Folded pop-ups lie just above their own paper, below the next leaf.
      The scale shrinks every pop-up (and its stick) around its base point. */
-  transform: translateZ(0.6px) scale3d(var(--pb-pop-scale, 1), var(--pb-pop-scale, 1), var(--pb-pop-scale, 1));
+  transform: translateZ(0.6px)
+    scale3d(
+      var(--pb-pop-scale, 1),
+      var(--pb-pop-scale, 1),
+      var(--pb-pop-scale, 1)
+    );
 }
 
 .pb-popup {
