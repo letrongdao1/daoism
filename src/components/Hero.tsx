@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { ArrowRightIcon } from "lucide-react";
-import { gsap } from "../lib/gsap";
+import { gsap, ScrollTrigger } from "../lib/gsap";
 import { storyTween } from "../lib/story";
 import LocalTime from "./LocalTime";
 import heroBg from "../assets/images/test-prl.jpg";
@@ -107,24 +107,38 @@ export default function Hero() {
         section.addEventListener("pointerleave", () => move(0, 0), { signal });
       }
 
-      gsap.to(blobARef.current, {
-        x: 60,
-        y: 30,
-        duration: 16,
-        ease: "sine.inOut",
-        yoyo: true,
-        repeat: -1,
-      });
-      gsap.to(blobBRef.current, {
-        x: -50,
-        y: -40,
-        duration: 20,
-        ease: "sine.inOut",
-        yoyo: true,
-        repeat: -1,
+      const loops = [
+        gsap.to(blobARef.current, {
+          x: 60,
+          y: 30,
+          duration: 16,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+        }),
+        gsap.to(blobBRef.current, {
+          x: -50,
+          y: -40,
+          duration: 20,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+        }),
+      ];
+      // pause the ambient loops while the hero is off-screen
+      ScrollTrigger.create({
+        trigger: section,
+        ...(story
+          ? {
+              containerAnimation: story,
+              start: "left right",
+              end: "right left",
+            }
+          : { start: "top bottom", end: "bottom top" }),
+        onToggle: ({ isActive }) =>
+          loops.forEach((t) => (isActive ? t.resume() : t.pause())),
       });
     }, sectionRef);
-
     return () => {
       listeners.abort();
       ctx.revert();
@@ -153,17 +167,17 @@ export default function Hero() {
         <div className="absolute inset-0 bg-ink/60" />
         <div
           ref={blobARef}
-          className="absolute top-[-10%] left-[-10%] h-[55vmax] w-[55vmax] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.14)_0%,transparent_70%)] blur-3xl"
+          className="absolute top-[-10%] left-[-10%] size-[55vmax] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.14)_0%,transparent_70%)] blur-3xl"
         />
         <div
           ref={blobBRef}
-          className="absolute right-[-10%] bottom-[-15%] h-[50vmax] w-[50vmax] rounded-full bg-[radial-gradient(circle,rgba(79,184,168,0.1)_0%,transparent_70%)] blur-3xl"
+          className="absolute right-[-10%] bottom-[-15%] size-[50vmax] rounded-full bg-[radial-gradient(circle,rgba(79,184,168,0.1)_0%,transparent_70%)] blur-3xl"
         />
       </div>
 
       <div
         ref={nameWrapRef}
-        className="relative lg:absolute lg:top-(--vg) lg:right-16 lg:z-1"
+        className="relative lg:absolute lg:top-(--vg) lg:right-16 lg:z-10"
       >
         <h1
           ref={nameRef}
@@ -186,10 +200,10 @@ export default function Hero() {
           {profile.role}
         </p>
         <div data-hero-fade className="flex flex-col gap-5">
-          <p className="font-title text-[14vw] leading-[0.95] text-accent lg:text-[min(12vh,4.2vw)]">
+          <p className="font-title text-[14vw] leading-[0.95] text-balance text-accent lg:text-[min(12vh,4.2vw)]">
             Any layer. Any stack.
           </p>
-          <p className="text-lg text-paper/60 lg:text-xl">
+          <p className="text-lg text-pretty text-paper/60 lg:text-xl">
             Curious enough to learn it, careful enough to ship it.
           </p>
         </div>
