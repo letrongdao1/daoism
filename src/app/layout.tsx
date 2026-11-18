@@ -1,33 +1,39 @@
 import type { Metadata } from "next";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { profile } from "@/data/profile";
+import Nav from "@/components/layout/Nav";
+import SmoothScroll from "@/components/providers/SmoothScroll";
+
+const geist = Geist({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-geist",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: `${profile.name} — Software Engineer`,
+  title: {
+    default: `${profile.name} — ${profile.role}`,
+    template: `%s — ${profile.name}`,
+  },
   description: profile.description,
   icons: { icon: "/favicon.ico" },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&family=DM+Sans:opsz,wght@9..40,400..600&family=JetBrains+Mono:wght@500&family=Caveat:wght@700&family=Montserrat:wght@400..800&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body>{children}</body>
+    <html lang="en" className={geist.variable}>
+      <body>
+        <a
+          href="#main"
+          className="sr-only z-60 bg-ink px-4 py-3 label text-paper focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
+        >
+          Skip to content
+        </a>
+        <SmoothScroll />
+        <Nav />
+        <main id="main">{children}</main>
+      </body>
     </html>
   );
 }

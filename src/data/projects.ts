@@ -7,6 +7,7 @@ import ekycBg from "../assets/images/projects/ekyc.png";
 import portfolioBg from "../assets/images/projects/portfolio.png";
 
 export type Project = {
+  slug: string;
   title: string;
   year: string;
   description: string;
@@ -21,6 +22,7 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "shareholder-meeting-portal",
     title: "Shareholder Meeting Portal",
     year: "2026",
     description:
@@ -32,6 +34,7 @@ export const projects: Project[] = [
     isInternal: true,
   },
   {
+    slug: "ekyc",
     title: "eKYC",
     year: "2026",
     description:
@@ -45,6 +48,7 @@ export const projects: Project[] = [
     isInternal: false,
   },
   {
+    slug: "internal-mis",
     title: "Internal MIS & Admin",
     year: "2025 - 2026",
     description:
@@ -56,6 +60,7 @@ export const projects: Project[] = [
     isInternal: true,
   },
   {
+    slug: "hnb-hub",
     title: "HNB Hub",
     year: "Oct 2025 - Jul 2026",
     description:
@@ -69,6 +74,7 @@ export const projects: Project[] = [
     isInternal: true,
   },
   {
+    slug: "portfolio",
     title: "Portfolio",
     year: "2026",
     description:
@@ -81,3 +87,6 @@ export const projects: Project[] = [
     isInternal: false,
   },
 ];
+
+export const getProject = (slug: string) =>
+  projects.find((project) => project.slug === slug);
