@@ -128,7 +128,7 @@ export default async function ProjectPage(
           key={chapter.title}
           className="shell grid-editorial gap-y-6 border-t border-line py-(--section-y)"
         >
-          <p className="col-span-full label text-accent md:col-span-3">
+          <p className="col-span-full label text-accent-ink md:col-span-3">
             {String(i + 1).padStart(2, "0")} — {chapter.title}
           </p>
           <RevealLines className="col-span-full text-title font-medium text-ink-faint md:col-span-9">

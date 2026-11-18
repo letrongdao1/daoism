@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
+import { getLenis } from "@/lib/lenis";
 import { home } from "@/data/home";
 import { projects } from "@/data/projects";
 import { techs } from "@/data/techs";
@@ -62,6 +63,23 @@ export default function WorkScroll() {
                 },
               );
             });
+
+          // keyboard: tabbing to an off-screen card scrolls the page to it
+          const onFocus = (e: FocusEvent) => {
+            const card = (e.target as Element).closest<HTMLElement>("a");
+            const st = slide.scrollTrigger;
+            if (!card || !st) return;
+            section.current!.scrollLeft = 0; // undo the browser's own nudge
+            const max = distance();
+            const x = gsap.utils.clamp(0, max, card.offsetLeft - 48);
+            const y = st.start + (x / max) * (st.end - st.start);
+            const lenis = getLenis();
+            if (lenis) lenis.scrollTo(y, { immediate: true });
+            else window.scrollTo(0, y);
+          };
+          const el = track.current!;
+          el.addEventListener("focusin", onFocus);
+          return () => el.removeEventListener("focusin", onFocus);
         },
       );
     },
@@ -71,25 +89,43 @@ export default function WorkScroll() {
   return (
     <section
       ref={section}
-      aria-labelledby="work-title"
+      aria-label={home.work.title}
       className="overflow-hidden md:flex md:h-svh md:items-center"
     >
+      <header className="shell flex items-end justify-between gap-6 pt-(--section-y) md:hidden">
+        <div>
+          <p className="mb-6 label text-ink-soft">01 — Work</p>
+          <p className="text-title font-medium">
+            {home.work.title}
+            <sup className="ml-2 align-super label text-accent-ink">
+              {pad(projects.length)}
+            </sup>
+          </p>
+        </div>
+        <Link
+          href="/projects"
+          className="shrink-0 label underline decoration-line underline-offset-4"
+        >
+          All →
+        </Link>
+      </header>
+
       <div
         ref={track}
-        className="flex snap-x snap-mandatory [scrollbar-width:none] items-stretch gap-[clamp(1rem,2vw,2rem)] overflow-x-auto px-(--gutter) py-(--section-y) md:w-max md:snap-none md:overflow-visible md:py-0 motion-reduce:md:w-auto motion-reduce:md:overflow-x-auto"
+        className="flex snap-x snap-mandatory scroll-px-(--gutter) [scrollbar-width:none] items-stretch gap-[clamp(1rem,2vw,2rem)] overflow-x-auto px-(--gutter) pt-8 pb-(--section-y) md:w-max md:snap-none md:overflow-visible md:py-0 motion-reduce:md:w-auto motion-reduce:md:overflow-x-auto"
       >
-        <header className="flex w-[78vw] shrink-0 snap-start flex-col justify-between md:w-[min(32vw,30rem)]">
+        <header className="flex w-[min(32vw,30rem)] shrink-0 flex-col justify-between max-md:hidden">
           <p className="label text-ink-soft">01 — Work</p>
           <div>
-            <h2 id="work-title" className="text-title font-medium">
+            <h2 className="text-title font-medium">
               {home.work.title}
-              <sup className="ml-2 align-super label text-accent">
+              <sup className="ml-2 align-super label text-accent-ink">
                 {pad(projects.length)}
               </sup>
             </h2>
             <Link
               href="/projects"
-              className="mt-6 inline-block label underline decoration-line underline-offset-4 transition-colors hover:text-accent"
+              className="mt-6 inline-block label underline decoration-line underline-offset-4 transition-colors hover:text-accent-ink"
             >
               All projects →
             </Link>
@@ -100,6 +136,7 @@ export default function WorkScroll() {
           <Link
             key={project.slug}
             href={`/projects/${project.slug}`}
+            data-cursor="View"
             className="group flex w-[78vw] shrink-0 snap-start flex-col gap-4 md:w-[min(58vw,56rem)]"
           >
             <div className="relative">

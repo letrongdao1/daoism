@@ -16,7 +16,7 @@
   --color-paper-dim: #e8e6e0;
   --color-ink: #111110;
   --color-ink-soft: #5d5c57;
-  --color-ink-faint: #9b9a94;
+  --color-ink-faint: #706f69;
   --color-line: rgb(17 17 16 / 0.12);
   --color-night: #0c0c0b;
   --color-night-soft: #1a1a18;
@@ -24,6 +24,8 @@
   --color-night-line: rgb(236 235 230 / 0.14);
   --color-accent: #409199;
   --color-accent-soft: #d6e8ea;
+  /* darker cyan for small text on light backgrounds (AA 4.5:1) */
+  --color-accent-ink: #2f7077;
 
   /* type scale (fluid) */
   --text-label: 0.75rem;
@@ -109,9 +111,16 @@ body {
   outline-offset: 3px;
 }
 
+/* custom cursor replaces the native one (fine pointer + full motion only) */
+.has-cursor,
+.has-cursor * {
+  cursor: none !important;
+}
+
 /* dark sections flip the local palette */
 [data-theme="dark"] {
   --color-line: var(--color-night-line);
+  --color-accent-ink: var(--color-accent);
   background: var(--color-night);
   color: var(--color-night-ink);
 }
@@ -221,5 +230,12 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* route transitions use pseudo-elements, which `*` doesn't match */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

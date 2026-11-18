@@ -6,6 +6,7 @@ import Nav from "@/components/layout/Nav";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import IntroCurtain from "@/components/layout/IntroCurtain";
 import Contact from "@/components/layout/Contact";
+import Cursor from "@/components/layout/Cursor";
 
 const geist = Geist({
   subsets: ["latin", "latin-ext"],
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Nav />
         <main id="main">{children}</main>
         <Contact />
+        <Cursor />
       </body>
     </html>
   );

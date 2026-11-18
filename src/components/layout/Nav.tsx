@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { getLenis } from "@/lib/lenis";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { profile } from "@/data/profile";
@@ -20,11 +21,26 @@ export default function Nav() {
   const open = openOn === pathname;
   const setOpen = (next: boolean) => setOpenOn(next ? pathname : null);
 
+  const toggle = useRef<HTMLButtonElement>(null);
+  const menu = useRef<HTMLElement>(null);
+
+  // while the mobile menu is open: lock scroll, move focus in, close on Esc
   useEffect(() => {
     if (!open) return;
+    const root = document.documentElement;
+    const button = toggle.current;
+    root.style.overflow = "hidden";
+    getLenis()?.stop();
+    menu.current?.querySelector("a")?.focus();
+
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpenOn(null);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      root.style.overflow = "";
+      getLenis()?.start();
+      window.removeEventListener("keydown", onKey);
+      button?.focus({ preventScroll: true });
+    };
   }, [open]);
 
   const isActive = (href: string) =>
@@ -79,6 +95,7 @@ export default function Nav() {
             type="button"
             className="label md:hidden"
             aria-expanded={open}
+            ref={toggle}
             aria-controls="mobile-menu"
             onClick={() => setOpen(!open)}
           >
@@ -88,6 +105,7 @@ export default function Nav() {
       </header>
 
       <nav
+        ref={menu}
         id="mobile-menu"
         aria-label="Mobile"
         hidden={!open}
@@ -99,6 +117,7 @@ export default function Nav() {
             <li key={link.href}>
               <Link
                 href={link.href}
+                onClick={() => setOpen(false)}
                 className="block text-title font-medium tracking-tight"
               >
                 {link.label}

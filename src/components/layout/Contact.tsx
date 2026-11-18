@@ -86,10 +86,10 @@ export default function Contact() {
                     : undefined
                 }
                 rel="noreferrer"
-                className="group flex items-baseline justify-between gap-6 py-5"
+                className="group flex items-baseline justify-between gap-x-6 gap-y-1 py-5 max-sm:flex-col"
               >
                 <span className="label text-night-ink/60">{link.label}</span>
-                <span className="flex items-baseline gap-3 text-lead font-medium transition-colors group-hover:text-accent">
+                <span className="flex min-w-0 items-baseline gap-3 text-lead font-medium break-all transition-colors group-hover:text-accent">
                   {link.value}
                   <span
                     aria-hidden

@@ -67,7 +67,7 @@ export default function AboutSplit() {
         data-claim
         className="col-span-full text-display font-medium"
       >
-        <span className="flex items-center">
+        <span className="flex flex-wrap items-center">
           {before}
           <span
             data-gap
@@ -119,7 +119,7 @@ export default function AboutSplit() {
 
         <Link
           href="/about"
-          className="label underline decoration-line underline-offset-4 transition-colors hover:text-accent"
+          className="label underline decoration-line underline-offset-4 transition-colors hover:text-accent-ink"
         >
           More about me →
         </Link>

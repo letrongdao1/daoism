@@ -46,7 +46,7 @@ export default function ExperienceTeaser() {
         <li className="border-t border-line pt-6">
           <Link
             href="/experience"
-            className="label underline decoration-line underline-offset-4 transition-colors hover:text-accent"
+            className="label underline decoration-line underline-offset-4 transition-colors hover:text-accent-ink"
           >
             Full experience →
           </Link>

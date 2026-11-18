@@ -48,6 +48,7 @@ export default function ProjectIndex() {
           <li key={project.slug} className="border-t border-line last:border-b">
             <Link
               href={`/projects/${project.slug}`}
+              data-cursor="Open"
               onPointerEnter={(e) => e.pointerType === "mouse" && setActive(i)}
               className={cn(
                 "grid-editorial items-baseline gap-y-3 py-[clamp(1.5rem,3vw,2.75rem)] transition-opacity duration-500",

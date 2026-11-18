@@ -56,7 +56,7 @@ export default function AboutPage() {
         <ol className="col-span-full grid gap-12 md:col-span-9 md:grid-cols-3 md:gap-6">
           {about.principles.map((item, i) => (
             <li key={item.title} className="flex flex-col gap-4">
-              <span className="label text-accent">{pad(i + 1)}</span>
+              <span className="label text-accent-ink">{pad(i + 1)}</span>
               <RevealLines as="h3" className="text-title font-medium">
                 {item.title}
               </RevealLines>

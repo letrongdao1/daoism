@@ -24,7 +24,7 @@ export default function ExperiencePage() {
             <div className="col-span-full flex items-center gap-3 md:col-span-3">
               <span className="label text-ink-soft">{item.period}</span>
               {item.isActive && (
-                <span className="flex items-center gap-1.5 label text-accent">
+                <span className="flex items-center gap-1.5 label text-accent-ink">
                   <span className="size-1.5 animate-pulse rounded-full bg-accent" />
                   Now
                 </span>
@@ -52,7 +52,7 @@ export default function ExperiencePage() {
             href={profile.cv}
             target="_blank"
             rel="noreferrer"
-            className="col-span-full label underline decoration-line underline-offset-4 transition-colors hover:text-accent md:col-start-5"
+            className="col-span-full label underline decoration-line underline-offset-4 transition-colors hover:text-accent-ink md:col-start-5"
           >
             Download full CV ↓
           </a>
