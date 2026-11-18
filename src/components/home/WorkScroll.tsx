@@ -8,6 +8,7 @@ import { gsap } from "@/lib/gsap";
 import { home } from "@/data/home";
 import { projects } from "@/data/projects";
 import { techs } from "@/data/techs";
+import ProjectCover from "@/components/projects/ProjectCover";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -101,17 +102,21 @@ export default function WorkScroll() {
             href={`/projects/${project.slug}`}
             className="group flex w-[78vw] shrink-0 snap-start flex-col gap-4 md:w-[min(58vw,56rem)]"
           >
-            <div className="relative aspect-4/3 overflow-hidden rounded-[clamp(1rem,1.6vw,1.75rem)] bg-paper-dim md:aspect-16/10">
-              {project.bg && (
-                <Image
-                  data-card-image
-                  src={project.bg}
-                  alt=""
-                  fill
-                  sizes="(min-width: 48rem) 58vw, 78vw"
-                  className="scale-[1.18] object-cover transition-[scale] duration-700 ease-out-expo group-hover:scale-[1.24]"
-                />
-              )}
+            <div className="relative">
+              <ProjectCover slug={project.slug}>
+                <div className="relative aspect-4/3 overflow-hidden rounded-[clamp(1rem,1.6vw,1.75rem)] bg-paper-dim md:aspect-16/10">
+                  {project.bg && (
+                    <Image
+                      data-card-image
+                      src={project.bg}
+                      alt=""
+                      fill
+                      sizes="(min-width: 48rem) 58vw, 78vw"
+                      className="scale-[1.18] object-cover transition-[scale] duration-700 ease-out-expo group-hover:scale-[1.24]"
+                    />
+                  )}
+                </div>
+              </ProjectCover>
               <span className="absolute top-4 left-4 rounded-full bg-paper/90 px-3 py-1.5 label backdrop-blur">
                 {pad(i + 1)}
               </span>
