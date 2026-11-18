@@ -4,6 +4,8 @@ import "./globals.css";
 import { profile } from "@/data/profile";
 import Nav from "@/components/layout/Nav";
 import SmoothScroll from "@/components/providers/SmoothScroll";
+import IntroCurtain from "@/components/layout/IntroCurtain";
+import Contact from "@/components/layout/Contact";
 
 const geist = Geist({
   subsets: ["latin", "latin-ext"],
@@ -30,9 +32,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
+        <IntroCurtain />
         <SmoothScroll />
         <Nav />
         <main id="main">{children}</main>
+        <Contact />
       </body>
     </html>
   );

@@ -116,10 +116,69 @@ body {
   color: var(--color-night-ink);
 }
 
+/* ---------------------------------------------------------------
+   First-paint intro. Pure CSS so it runs before hydration:
+   a curtain with the wordmark lifts, then hero lines rise.
+   --------------------------------------------------------------- */
+
+.intro-curtain {
+  animation: curtain-lift 0.9s 0.9s var(--ease-in-out-quart) both;
+}
+
+.intro-curtain-mark {
+  animation: mark-in 0.7s 0.1s var(--ease-out-expo) both;
+}
+
+.intro-line {
+  display: block;
+  animation: line-rise 1.2s calc(1.35s + var(--i, 0) * 0.09s)
+    var(--ease-out-expo) both;
+}
+
+.intro-fade {
+  animation: fade-in 1s 1.8s ease-out both;
+}
+
+/* later client-side visits: no curtain to wait for */
+[data-intro-done] .intro-line {
+  animation-delay: calc(var(--i, 0) * 0.09s);
+}
+
+[data-intro-done] .intro-fade {
+  animation-delay: 0.3s;
+}
+
+@keyframes curtain-lift {
+  to {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+  }
+}
+
+@keyframes mark-in {
+  from {
+    opacity: 0;
+    translate: 0 40%;
+  }
+}
+
+@keyframes line-rise {
+  from {
+    translate: 0 110%;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
+    animation-delay: 0s !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
