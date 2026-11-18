@@ -7,8 +7,8 @@ import type { TechId } from "./techs";
 export const home = {
   hero: {
     // each entry is one display line
-    lines: ["Software that", "feels simple", "to use"],
-    stack: ["React", "Next.js", "Node.js", "ASP.NET", "SQL"],
+    lines: ["From the idea", "to the interface", "to launch"],
+    stack: ["TypeScript", "React", "Next.js", "Node.js", "SQL"],
     badge: "Scroll to explore · Scroll to explore · ",
   },
   work: {
@@ -42,6 +42,6 @@ export const home = {
     ] satisfies TechId[],
   },
   contact: {
-    line: "Have something in mind? Let's talk.",
+    line: "Looking to hire or collaborate? Get in touch.",
   },
 };

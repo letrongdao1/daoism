@@ -25,6 +25,6 @@ export const about = {
   now: [
     { label: "Currently", value: "Master of IT, UIT — VNU-HCM" },
     { label: "Based in", value: "Ho Chi Minh City, Vietnam" },
-    { label: "Open to", value: "Fullstack roles · On-site or remote" },
+    { label: "Open to", value: "Engineering, PM & BA roles · On-site or remote" },
   ],
 };

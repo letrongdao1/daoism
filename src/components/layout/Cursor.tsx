@@ -35,11 +35,11 @@ export default function Cursor() {
     root.classList.add("has-cursor");
 
     const x = gsap.quickTo(dot.current, "x", {
-      duration: 0.35,
+      duration: 0.2,
       ease: "power3",
     });
     const y = gsap.quickTo(dot.current, "y", {
-      duration: 0.35,
+      duration: 0.2,
       ease: "power3",
     });
 

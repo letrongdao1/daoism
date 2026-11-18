@@ -3,7 +3,13 @@ import type { TechId } from "./techs";
 export const profile = {
   name: "Dao Le Trong",
   role: "Fullstack Software Engineer",
-  availability: "Open to work · Ho Chi Minh City / Remote",
+  availability: "Open to engineering, PM & BA roles · HCMC / Remote",
+  openTo: [
+    "Fullstack Engineering",
+    "Project Management",
+    "Business Analysis",
+    "Blockchain Development",
+  ],
   experience: "two years",
   description:
     "Portfolio of Dao Le Trong, software engineer with full-stack experience in React, Next.js, Node.js.",

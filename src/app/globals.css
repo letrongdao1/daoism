@@ -106,9 +106,11 @@ body {
   color: var(--color-paper);
 }
 
-:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 3px;
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
 }
 
 /* custom cursor replaces the native one (fine pointer + full motion only) */

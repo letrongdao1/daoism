@@ -66,9 +66,9 @@ export default function Hero() {
           className="intro-fade col-span-1 w-[clamp(5rem,9vw,8rem)] justify-self-end max-md:hidden md:col-span-2"
         />
 
-        <p className="intro-fade col-span-full flex flex-wrap gap-x-3 label text-ink-soft">
+        <p className="intro-fade col-span-full flex flex-wrap gap-x-3 label text-ink-soft max-sm:gap-x-1 max-sm:tracking-[0.04em]">
           {home.hero.stack.map((item, i) => (
-            <span key={item} className="flex gap-x-3">
+            <span key={item} className="flex gap-x-3 max-sm:gap-x-1">
               {i > 0 && <span aria-hidden>/</span>}
               {item}
             </span>
