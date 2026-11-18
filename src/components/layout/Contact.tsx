@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { home } from "@/data/home";
 import { contactLinks, profile } from "@/data/profile";
+import Lottie from "@/components/motion/Lottie";
 import RevealLines from "@/components/motion/RevealLines";
 
 const links = [
@@ -74,6 +75,11 @@ export default function Contact() {
             {home.contact.line}
           </RevealLines>
         </h2>
+
+        <Lottie
+          src="/lottie/scribble-on-dark.json"
+          className="col-span-3 hidden size-[clamp(9rem,15vw,15rem)] self-center justify-self-end opacity-80 md:block"
+        />
 
         <ul className="col-span-full md:col-span-8 md:col-start-5">
           {links.map((link) => (
